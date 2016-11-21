@@ -451,46 +451,6 @@ static int init_global_data(global_data_t * data,
     return retval;
 }
 
-// determine if we can run this flavor on the current kernel
-static int flavor_and_kernel_compatible(flavor_ptr f)
-{
-    int retval = 1;
-
-    if (f->flavor_id == RTAPI_POSIX_ID)
-	return 1; // no prerequisites
-
-    if (kernel_is_xenomai()) {
-	if (f->flavor_id == RTAPI_RT_PREEMPT_ID) {
-	    fprintf(stderr,
-		    "MSGD:%d Warning: starting %s RTAPI on a Xenomai kernel\n",
-		    rtapi_instance, f->name);
-	    return 1;
-	}
-	if ((f->flavor_id != RTAPI_XENOMAI_ID) &&
-	    (f->flavor_id != RTAPI_XENOMAI_KERNEL_ID)) {
-	    fprintf(stderr,
-		    "MSGD:%d ERROR: trying to start %s RTAPI on a Xenomai kernel\n",
-		    rtapi_instance, f->name);
-	    return 0;
-	}
-    }
-
-    if (kernel_is_rtai() &&
-	(f->flavor_id != RTAPI_RTAI_KERNEL_ID)) {
-	fprintf(stderr, "MSGD:%d ERROR: trying to start %s RTAPI on an RTAI kernel\n",
-		    rtapi_instance, f->name);
-	return 0;
-    }
-
-    if (kernel_is_rtpreempt() &&
-	(f->flavor_id != RTAPI_RT_PREEMPT_ID)) {
-	fprintf(stderr, "MSGD:%d ERROR: trying to start %s RTAPI on an RT PREEMPT kernel\n",
-		rtapi_instance, f->name);
-	return 0;
-    }
-    return retval;
-}
-
 // actions common to sigaction and signalfd()
 static void start_shutdown(int signal)
 {
@@ -887,13 +847,6 @@ int main(int argc, char **argv)
 
     if (flavor == NULL) {
 	fprintf(stderr, "%s: FATAL - failed to detect thread flavor\n", progname);
-	exit(EXIT_FAILURE);
-    }
-
-    // can we actually run what's being suggested?
-    if (!flavor_and_kernel_compatible(flavor)) {
-	fprintf(stderr, "%s: FATAL - cant run the %s flavor on this kernel\n",
-		progname, flavor->name);
 	exit(EXIT_FAILURE);
     }
 
