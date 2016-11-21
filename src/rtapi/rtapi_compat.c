@@ -284,6 +284,12 @@ flavor_ptr default_flavor(void)
 	if (check_rtapi_lib((char *)f->name))
 	    return f;
     }
+
+    /* we're compiling only for RT API, so it's our preferred choice */
+    f = flavor_byid(RTAPI_RT_PREEMPT_ID);
+    if (check_rtapi_lib((char *)f->name))
+        return f;
+
     return flavor_byid(RTAPI_POSIX_ID);
 }
 
