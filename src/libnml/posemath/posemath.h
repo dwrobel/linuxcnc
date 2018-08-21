@@ -67,6 +67,7 @@
 *
 * Last change: 
 ********************************************************************/
+#include <math.h>
 
 #ifndef POSEMATH_H
 #define POSEMATH_H
