@@ -477,26 +477,30 @@ AC_MSG_RESULT($HIDRAW_H_USABLE)
 AC_SUBST([HIDRAW_H_USABLE])
 
 #
-# Check for rpc/rpc.h
+# check for tirpc
 #
+AC_ARG_WITH(
+    [tirpc],
+    [  --with-tirpc                       Specify whether or not to use
+                                          the tirpc library
+                                          (defaults to "no")],
+    [WITH_TIRPC=$withval],
+    [WITH_TIRPC=no]
+)
 
-AC_MSG_CHECKING([for usability of rpc/rpc.h])
-AC_TRY_LINK(
+AS_IF(
+    [test "x$WITH_TIRPC" = "xyes"],
     [
-#include <rpc/rpc.h>
-    ],
-    [
-struct sockaddr_in *foo;
-get_myaddress(foo);
-    ],
-    [
-        AC_MSG_RESULT(yes)
-    ],
-    [
-        AC_MSG_RESULT(no)
-        AC_MSG_ERROR([Unable to use rpc.h])
+	PKG_CHECK_MODULES(TIRPC, libtirpc,
+	    [
+	      HAVE_TIRPC=yes
+	      AC_DEFINE([HAVE_TIRPC], [], [if tirpc library is available])
+	    ],
+	    [ AC_MSG_ERROR([package tirpc not found]) ]
+	    )
     ]
 )
+AC_SUBST(HAVE_TIRPC)
 
 #
 # check for libmodbus3
@@ -1759,6 +1763,7 @@ AC_CONFIG_FILES(../share/applications/linuxcnc.desktop)
 AC_CONFIG_FILES(../share/desktop-directories/cnc.directory)
 AC_CONFIG_FILES(../share/menus/CNC.menu)
 AC_OUTPUT()
+
 
 ##############################################################################
 # message to the user what to do next, after a succesfull ./configure        #
