@@ -4,7 +4,7 @@
 
 Name:          machinekit
 Version:       0.1
-Release:       12.%{date}git%{shortcommit0}%{?dist}
+Release:       13.%{date}git%{shortcommit0}%{?dist}
 Summary:       A platform for machine control applications
 License:       GPLv2+
 Group:         Applications/Engineering
@@ -28,12 +28,14 @@ Patch6:        %{name}-0006-remove-platform-specific-compiler-options.patch
 Patch7:        %{name}-0007-Add-a-possibility-to-use-libtirpc-as-an-rpc-rpc.h-pr.patch
 # Add missing <math.h> header file
 Patch8:        %{name}-0008-Add-missing-math.h-header.patch
-# Remove ambiguous python shebang
+# Reported upstream: https://github.com/machinekit/machinekit-cnc/pull/58
 Patch9:        %{name}-0009-Remove-ambiguous-python-shebang-use-python2-explicit.patch
-# Fix mangling shebangs
+# Reported upstream: https://github.com/machinekit/machinekit-cnc/pull/61
 Patch10:       %{name}-0010-Fix-mangling-shebangs.patch
-# Fix configure error when /usr/bin/python is not available
+# Reported upstream: https://github.com/machinekit/machinekit-cnc/pull/59
 Patch11:       %{name}-0011-Fix-configure-error-when-python-interpreter-is-avail.patch
+# Reported upstream: https://github.com/machinekit/machinekit-cnc/pull/60
+Patch12:       %{name}-0012-Remove-executable-bit-for-files-without-shebang.patch
 
 %{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
@@ -434,6 +436,10 @@ exit 0
 
 
 %changelog
+* Wed Feb 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-13.20190123git1dfa004
+- Fix Remove-executable-bit-for-files-without
+- Mark patches reported upstream
+
 * Wed Feb 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-12.20190123git1dfa004
 - Spec cleanup
 
