@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 if [ "$UID" -ne "0" ] ; then
         echo "Script must be run as root!"

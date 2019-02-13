@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # This script checks if the current version (HEAD) is an official release.
 # If so, the program returns with an exit code of 0 (True).  If it is not a

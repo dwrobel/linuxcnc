@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 if [ ! -z "$EMC2_HOME" ]; then
     source $EMC2_HOME/scripts/githelper.sh

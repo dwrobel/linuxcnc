@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # M101 in your G code program will run the Linux commands in this
 # shell script "batch" file, passing the P and Q variables as command

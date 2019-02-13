@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 function say_done {
     espeak "done" 2> /dev/null

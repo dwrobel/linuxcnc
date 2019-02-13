@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 set -o monitor
 ./build-debug.sh
 cp position.blank position.txt

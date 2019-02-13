@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 # Copyright 2013
 # Charles Steinkuehler <charles@steinkuehler.net>
 #

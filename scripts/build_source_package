@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/bash -e
 #
 # Update the Changelog file to create packages with version/release
 # that continuously increments (to ensure `apt-get upgrade` works) and

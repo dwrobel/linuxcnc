@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # this file is not needed nor functional for Replicape on Debian Stretch
 SLOTS=/sys/devices/bone_capemgr.*/slots
 for DTBO in BB-BONE-REPLICAP ; do

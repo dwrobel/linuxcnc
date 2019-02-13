@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 # This file is used for scripts that demonstrate pyvcp
 # The scripts typically use an extension of .demo

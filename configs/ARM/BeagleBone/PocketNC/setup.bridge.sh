@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 dtbo_err () {
 	echo "Error loading device tree overlay file: $DTBO" >&2

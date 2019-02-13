@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 SLOTS=/sys/devices/bone_capemgr.*/slots
 for DTBO in BB-BONE-REPLICAP ; do

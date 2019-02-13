@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # M106: Fan On
 # Example: M106 S127

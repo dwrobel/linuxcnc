@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 TEST_DIR=$(dirname $1)
 cd $TEST_DIR

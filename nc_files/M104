@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # M104: Set Extruder Temperature
 # Example: M104 P200

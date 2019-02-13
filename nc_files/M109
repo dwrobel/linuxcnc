@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # M109: Set Extruder Temperature and Wait 
 # M109 in Marlin, Sprinter (ATmega port)

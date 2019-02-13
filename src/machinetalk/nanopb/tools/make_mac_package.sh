@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 # Run this script in the top nanopb directory to create a binary package
 # for Mac OS X users.

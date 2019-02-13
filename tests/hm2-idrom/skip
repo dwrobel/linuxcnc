@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #                                                       -*-shell-script-*-
 
 # Skip the hm2-idrom test if not running kernel threads and the

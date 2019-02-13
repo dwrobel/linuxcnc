@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # maintainer: when adding items update three places:
 #             usage(), show_all(), and show_item()
 #

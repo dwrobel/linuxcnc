@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 # this line restarts using wish \
 exec wish "$0" "$@"
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # This script (M100) is called to append an integer to a log file,
 # for testing purposes

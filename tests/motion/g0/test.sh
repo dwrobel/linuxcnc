@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 #export PATH=$PATH:$EMC2_HOME/tests/helpers
 #source $EMC2_HOME/tests/helpers/test-functions.sh

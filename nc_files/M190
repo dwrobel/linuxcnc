@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # M190: Wait for bed temperature to reach target temp 
 # Example: M190 S60

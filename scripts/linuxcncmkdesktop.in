@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 # file types supported: .ini, .demo
 
 EMC_BIN_DIR=@EMC2_BIN_DIR@

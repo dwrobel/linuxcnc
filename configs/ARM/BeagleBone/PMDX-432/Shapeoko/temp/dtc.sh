@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 #This source file is provided under MIT License terms.
 #Copyright (c) 2013 Calypso Ventures, Inc.
 #

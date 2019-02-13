@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 ######################################################################
 # Initial setup for branding change to ensure existing dirs are found

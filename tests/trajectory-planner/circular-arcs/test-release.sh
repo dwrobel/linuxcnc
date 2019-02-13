@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 set -o monitor
 #./build-release.sh
 cp position.blank configs/position.txt

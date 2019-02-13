@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/bash -e
 #
 # Build/cross-build packages and test Machinekit in Docker
 #

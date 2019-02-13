@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 # the next line restarts using emcsh \
 exec $LINUXCNC_EMCSH "$0" "$@"
 

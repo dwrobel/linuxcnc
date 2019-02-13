@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # Custom Git merge driver - merges PO files using msgcat(1)
 #

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # M140: Bed Temperature (Fast)
 # Example: M140 S55

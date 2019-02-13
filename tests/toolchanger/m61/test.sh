@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 cp -f ../simpockets.tbl.original simpockets.tbl
 

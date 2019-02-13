@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 thisfile=$(readlink -f "$0")
 thisdir=$(dirname "$thisfile")

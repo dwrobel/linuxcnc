@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 if [ ! -r /sys/class/gpio/gpio61 ] ; then
 # Output-Ports (pru))

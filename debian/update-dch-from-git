@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 if [ ! -d debian -o ! -d src ]; then
     echo "this script must be run from the root of the source tree (the directory with debian and src in it)"

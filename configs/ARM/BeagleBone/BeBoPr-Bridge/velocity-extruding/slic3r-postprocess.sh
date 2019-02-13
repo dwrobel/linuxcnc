@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # first get the variables needed for setting width and height for
 # extruding from the slic3r file

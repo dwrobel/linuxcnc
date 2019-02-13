@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 set -o monitor
 if [ ! -e "$1" ]
 then

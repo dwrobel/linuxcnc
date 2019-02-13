@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 # the next line restarts using wish \
 exec ${LINUXCNC_EMCSH-wish} "$0" "$@"
 

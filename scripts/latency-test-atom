@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 SCRIPT_LOCATION=$(dirname $(readlink -f $0));
 if [ -f $SCRIPT_LOCATION/rip-environment ] && [ -z "$EMC2_HOME" ]; then
     . $SCRIPT_LOCATION/rip-environment

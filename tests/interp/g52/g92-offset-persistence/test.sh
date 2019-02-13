@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # Set up .var file with made-up values for #5210-#5219
 #
