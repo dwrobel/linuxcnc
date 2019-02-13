@@ -373,7 +373,7 @@ PROFILE_CFLAGS :=
 PROFILE_LDFLAGS :=
 
 CFLAGS := $(INCLUDE) $(OPT) $(DEBUG) $(DPKG_CFLAGS) $(PROFILE_CFLAGS) \
-	-DULAPI $(call cc-option,-std=gnu99 -fgnu89-inline)
+	-DULAPI $(call cc-option,-std=gnu99 -fgnu89-inline -fPIC)
 
 # make ck_pr.h happy:
 CFLAGS += $(CK_CFLAGS)
@@ -397,7 +397,7 @@ LDFLAGS += -L$(LIB_DIR) -Wl,-rpath,$(LIB_DIR)
 else
 LDFLAGS += -Wl,-rpath-link,../lib
 endif
-LDFLAGS += -Wl,--no-as-needed
+LDFLAGS += -Wl,--no-as-needed $(CFLAGS)
 
 # Rules to make .o (object) files
 $(sort $(CUSEROBJS)) : objects/%.o: %.c
