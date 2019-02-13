@@ -2180,6 +2180,32 @@ AS_IF(
 )
 AC_SUBST(HAVE_LTTNG_UST)
 
+#
+# check for tirpc
+#
+AC_ARG_WITH(
+    [tirpc],
+    [  --with-tirpc                       Specify whether or not to use
+                                          the tirpc library
+                                          (defaults to "no")],
+    [WITH_TIRPC=$withval],
+    [WITH_TIRPC=no]
+)
+
+AS_IF(
+    [test "x$WITH_TIRPC" = "xyes"],
+    [
+	PKG_CHECK_MODULES(TIRPC, libtirpc,
+	    [
+	      HAVE_TIRPC=yes
+	      AC_DEFINE([HAVE_TIRPC], [], [if tirpc library is available])
+	    ],
+	    [ AC_MSG_ERROR([package tirpc not found]) ]
+	    )
+    ]
+)
+AC_SUBST(HAVE_TIRPC)
+
 ##############################################################################
 # Subsection 3.2 - define default dirs, these get used in a lot of places    #
 # we decide based on RIP or install where stuff goes                         #
