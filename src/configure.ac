@@ -1096,20 +1096,6 @@ AC_ARG_ENABLE(nml,
     ])
 
 ##############################################################################
-# Subsection 2.3.2                                                           #
-# Dependencies for mkwrapper                                                 #
-# pyftpdlib                                                                  #
-##############################################################################
-
-AC_PYTHON_MODULE(pyftpdlib.authorizers, failed to import pyftpdlib.authorizers
- - python-pyftpdlib package missing or too old? )
-AC_PYTHON_MODULE(pyftpdlib.handlers, failed to import pyftpdlib.handlers
- - python-pyftpdlib package missing or too old? )
-AC_PYTHON_MODULE(pyftpdlib.servers, failed to import pyftpdlib.servers
- - python-pyftpdlib package missing or too old? )
-
-
-##############################################################################
 # Subsection 2.4                                                             #
 # Kernel detection                                                           #
 # Find all kernels on system and assess realtime capabilities                #
