@@ -36,6 +36,8 @@ Patch10:       %{name}-0010-Fix-mangling-shebangs.patch
 Patch11:       %{name}-0011-Fix-configure-error-when-python-interpreter-is-avail.patch
 # Reported upstream: https://github.com/machinekit/machinekit-cnc/pull/60
 Patch12:       %{name}-0012-Remove-executable-bit-for-files-without-shebang.patch
+# Disabled as we don't have python2-pyftpdlib on >=F30
+Patch13:       %{name}-0013-Disable-dependencies-for-mkwrapper.patch
 
 %{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
@@ -74,7 +76,8 @@ BuildRequires: libwebsockets-devel
 BuildRequires: libtirpc-devel
 BuildRequires: protobuf-devel
 BuildRequires: protobuf-python
-BuildRequires: pyftpdlib
+# Disabled as we don't have python2-pyftpdlib on >=F30
+# BuildRequires: pyftpdlib
 BuildRequires: tcl-devel
 BuildRequires: tk-devel
 BuildRequires: tkinter
@@ -90,7 +93,7 @@ Requires:      avahi
 Requires:      blt
 Requires:      bwidget
 Requires:      hicolor-icon-theme
-Requires:      python2-mttkinter
+#Requires:      python2-mttkinter
 Requires:      tkimg
 Requires:      pygtk2
 # for ssh -X to work TODO: do we really need it?
@@ -111,9 +114,10 @@ Requires:      tcl-togl
 Requires:      pam
 # for pncconf
 Requires:      gnome-python2-gnome
-# for mkwrapper GUI
-Requires:      python-avahi
-Requires:      pyftpdlib
+# Disabled as we don't have python2-pyftpdlib on >=F30
+## for mkwrapper GUI
+#Requires:      python-avahi
+#Requires:      pyftpdlib
 
 
 %description
@@ -344,7 +348,8 @@ exit 0
 %{_bindir}/milltask
 %{_bindir}/mklauncher
 %{_bindir}/mksocmemio
-%{_bindir}/mkwrapper
+# Disabled as we don't have python2-pyftpdlib on >=F30
+%exclude %{_bindir}/mkwrapper
 %{_bindir}/ngcgui
 %{_bindir}/npbdecode
 %{_bindir}/pasm
@@ -438,6 +443,7 @@ exit 0
 %changelog
 * Wed May 29 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-14.20190528git9021173
 - Rebase patches
+- Disable mkwrapper due to lack of python2-pyftpdlib on >=f30
 - Update to the lastest version
 
 * Wed Feb 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-13.20190123git1dfa004
