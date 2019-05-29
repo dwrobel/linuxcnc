@@ -4,7 +4,7 @@
 
 Name:          machinekit
 Version:       0.1
-Release:       14.%{date}git%{shortcommit0}%{?dist}
+Release:       15.%{date}git%{shortcommit0}%{?dist}
 Summary:       A platform for machine control applications
 License:       GPLv2+
 Group:         Applications/Engineering
@@ -38,6 +38,8 @@ Patch11:       %{name}-0011-Fix-configure-error-when-python-interpreter-is-avail
 Patch12:       %{name}-0012-Remove-executable-bit-for-files-without-shebang.patch
 # Disabled as we don't have python2-pyftpdlib on >=F30
 Patch13:       %{name}-0013-Disable-dependencies-for-mkwrapper.patch
+# Reporte upstream: https://github.com/machinekit/machinekit-hal/pull/212/
+Patch14:       %{name}-0014-Fix-for-ld-cannot-find-ltclstub.patch
 
 %{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
@@ -118,7 +120,10 @@ Requires:      gnome-python2-gnome
 ## for mkwrapper GUI
 #Requires:      python-avahi
 #Requires:      pyftpdlib
-
+# for latency-test
+Requires:       python2-tkinter
+# for stepconf
+Requires:       pygtk2-libglade
 
 %description
 Machinekit is the next-generation Enhanced Machine Controller
@@ -441,9 +446,13 @@ exit 0
 
 
 %changelog
+* Wed May 29 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-15.20190528git9021173
+- Update requires for latency-test
+
 * Wed May 29 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-14.20190528git9021173
 - Rebase patches
 - Disable mkwrapper due to lack of python2-pyftpdlib on >=f30
+- Fix linking issues with tclstub
 - Update to the lastest version
 
 * Wed Feb 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-13.20190123git1dfa004
