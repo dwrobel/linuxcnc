@@ -1,10 +1,10 @@
-%global date 20190123
-%global commit0 1dfa0045ba95fd68e744826d684efa513cbffa97
+%global date 20190528
+%global commit0 902117324cfba3bb4959401439d1e833d8b6e148
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name:          machinekit
 Version:       0.1
-Release:       13.%{date}git%{shortcommit0}%{?dist}
+Release:       14.%{date}git%{shortcommit0}%{?dist}
 Summary:       A platform for machine control applications
 License:       GPLv2+
 Group:         Applications/Engineering
@@ -436,6 +436,10 @@ exit 0
 
 
 %changelog
+* Wed May 29 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-14.20190528git9021173
+- Rebase patches
+- Update to the lastest version
+
 * Wed Feb 13 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-13.20190123git1dfa004
 - Fix Remove-executable-bit-for-files-without
 - Mark patches reported upstream
