@@ -243,20 +243,9 @@ void _rtapi_task_delete_hook(task_data *task, int task_id) {
 
 static int realtime_set_affinity(task_data *task) {
     cpu_set_t set;
-    int err, cpu_nr, use_cpu = -1;
+    int err, cpu_nr, use_cpu = task->cpu;
 
-    pthread_getaffinity_np(extra_task_data[task_id(task)].thread,
-			   sizeof(set), &set);
-    if (task->cpu > -1) { // CPU set explicitly
-	if (!CPU_ISSET(task->cpu, &set)) {
-	    rtapi_print_msg(RTAPI_MSG_ERR, 
-			    "RTAPI: ERROR: realtime_set_affinity(%s): "
-			    "CPU %d not available\n",
-			    task->name, task->cpu);
-	    return -EINVAL;
-	}
-	use_cpu = task->cpu;
-    } else {
+    if (use_cpu == -1) {
 	// select last CPU as default
 	for (cpu_nr = CPU_SETSIZE - 1; cpu_nr >= 0; cpu_nr--) {
 	    if (CPU_ISSET(cpu_nr, &set)) {
