@@ -502,9 +502,7 @@ public:
     //! \sa setReset(bool, size_t)
     void setFunction(bool enabled);
     //! Requests machine to search home for all axis. \ref halui.home-all
-    void setMachineHomingAll(bool isRisingEdge);
-    //! Requests machine to go home (move axis to home position).
-//    void requestMachineGoHome(bool enabled);
+    void setMachineHomingAll(bool enabled);
     //! \sa setSafeZ(bool, size_t)
     void setSafeZ(bool enabled);
     //! \sa setReset(bool, size_t)
