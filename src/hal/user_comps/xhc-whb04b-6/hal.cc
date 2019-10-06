@@ -613,6 +613,7 @@ void Hal::init(const MetaButtonCodes* metaButtons, const KeyCodes& keyCodes)
     newHalBit(HAL_OUT, &(memory->out.resetEmergencyStop), mHalCompId, "%s.halui.estop.reset", mComponentPrefix);
 
     newHalBit(HAL_IN, &(memory->in.isMachineOn), mHalCompId, "%s.halui.machine.is-on", mComponentPrefix);
+        
     newHalBit(HAL_OUT, &(memory->out.doMachineOn), mHalCompId, "%s.halui.machine.on", mComponentPrefix);
     newHalBit(HAL_OUT, &(memory->out.doMachineOff), mHalCompId, "%s.halui.machine.off", mComponentPrefix);
 
@@ -1094,12 +1095,12 @@ void Hal::setSpindleMinus(bool enabled)
 // ----------------------------------------------------------------------
 
 /**
- * Requests machine to go home home.
- * The task is performed via MDI command.
+ * Requests machine to do homing.
+ * The task is performed via halui command.
  */
-void Hal::requestMachineGoHome(bool enabled)
+void Hal::setMachineHomingAll(bool enabled)
 {
-    if (requestMdiMode(enabled))
+    if (requestManualMode(enabled))
     {
         if (enabled)
         {
@@ -1109,7 +1110,7 @@ void Hal::requestMachineGoHome(bool enabled)
 
     if (!enabled)
     {
-        setPin(enabled, KeyCodes::Buttons.machine_home.text);
+      setPin(enabled, KeyCodes::Buttons.machine_home.text);
     }
 }
 
@@ -1367,23 +1368,6 @@ void Hal::setMacro9(bool enabled)
 
 // ----------------------------------------------------------------------
 
-void Hal::requestMachineHomingAll(bool isRisingEdge)
-{
-    if (requestManualMode(isRisingEdge))
-    {
-        if (isRisingEdge)
-        {
-            *memory->out.homeAll = isRisingEdge;
-        }
-    }
-
-    if (!isRisingEdge)
-    {
-      *memory->out.homeAll = isRisingEdge;
-    }
-}
-
-// ----------------------------------------------------------------------
 
 void Hal::setMacro10(bool enabled)
 {
