@@ -1,3 +1,26 @@
+= Machinekit
+
+[literal]
+ █████╗ ██████╗  ██████╗██╗  ██╗██╗██╗   ██╗███████╗██████╗ 
+██╔══██╗██╔══██╗██╔════╝██║  ██║██║██║   ██║██╔════╝██╔══██╗
+███████║██████╔╝██║     ███████║██║██║   ██║█████╗  ██║  ██║
+██╔══██║██╔══██╗██║     ██╔══██║██║╚██╗ ██╔╝██╔══╝  ██║  ██║
+██║  ██║██║  ██║╚██████╗██║  ██║██║ ╚████╔╝ ███████╗██████╔╝
+╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝  ╚══════╝╚═════╝ 
+
+
+[IMPORTANT]
+*This repository has been __archived__. This means that there will be no new development nor security updates and pull requests will not be accepted. The builder system was taken down.*
+
+*The development continues in two separate repositories:*
+
+1. *Machinekit-HAL*: https://github.com/machinekit/machinekit-hal
+2. *Machinekit-CNC*: https://github.com/machinekit/machinekit-cnc
+
+*Original, frozen `.deb` packages for Machinekit will be available in `deb.machinekit.io` repository for the foreseeable future.*
+
+'''
+
 Machinekit: image:https://jenkins.machinekit.io/buildStatus/icon?job=machinekit-builder[]
 
 Manpages: image:https://jenkins.machinekit.io/buildStatus/icon?job=machinekit-manpages[]
