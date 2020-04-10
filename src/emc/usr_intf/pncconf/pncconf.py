@@ -43,7 +43,7 @@ import subprocess
 import gobject
 import gtk
 import gtk.glade
-import gnome.ui
+#import gnome.ui
 
 import xml.dom.minidom
 import xml.etree.ElementTree
@@ -3980,7 +3980,7 @@ class App:
            global _DEBUGSTRING
            _DEBUGSTRING = ['all']
 
-        gnome.init("pncconf", "0.6") 
+        #gnome.init("pncconf", "0.6") 
         
         self.splash_screen()
         glade = xml.dom.minidom.parse(os.path.join(datadir, self.fname))
@@ -4018,8 +4018,8 @@ class App:
         axisdiagram = os.path.join(helpdir,"lathe_diagram.png")
         self.widgets.helppic1.set_from_file(axisdiagram)
         self.widgets.openloopdialog.hide()
-        self.widgets.druidpagestart1.set_watermark(self.watermark)
-        self.widgets.complete.set_watermark(self.watermark)
+#        self.widgets.druidpagestart1.set_watermark(self.watermark)
+#        self.widgets.complete.set_watermark(self.watermark)
         self.widgets.druidpagestart1.show()
         self.widgets.complete.show()
         
