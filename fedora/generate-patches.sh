@@ -6,7 +6,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 rm -f *.patch 2>/dev/null
 
-git format-patch $(git merge-base origin/master origin/${BRANCH})..${BRANCH}
+git format-patch $(git merge-base upstream/master ${BRANCH})..${BRANCH}
 
 num=1
 

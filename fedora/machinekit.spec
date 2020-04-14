@@ -1,10 +1,10 @@
-%global date 20190528
-%global commit0 902117324cfba3bb4959401439d1e833d8b6e148
+%global date 20200305
+%global commit0 ef46939b490bfa029c9d25474cc2e35543c9ac8e
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name:          machinekit
 Version:       0.1
-Release:       15.%{date}git%{shortcommit0}%{?dist}
+Release:       17.%{date}git%{shortcommit0}%{?dist}
 Summary:       A platform for machine control applications
 License:       GPLv2+
 Group:         Applications/Engineering
@@ -38,8 +38,10 @@ Patch11:       %{name}-0011-Fix-configure-error-when-python-interpreter-is-avail
 Patch12:       %{name}-0012-Remove-executable-bit-for-files-without-shebang.patch
 # Disabled as we don't have python2-pyftpdlib on >=F30
 Patch13:       %{name}-0013-Disable-dependencies-for-mkwrapper.patch
-# Reporte upstream: https://github.com/machinekit/machinekit-hal/pull/212/
-Patch14:       %{name}-0014-Fix-for-ld-cannot-find-ltclstub.patch
+# Fix newthread cpu= when isolcpus= is in use
+Patch14:       %{name}-0014-Fix-newthread-cpu-when-isolcpus-is-in-use.patch
+# Fix gtk-3 errors
+Patch15:       %{name}-0015-Make-it-working-with-gtk-3.patch
 
 %{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
@@ -82,7 +84,7 @@ BuildRequires: protobuf-python
 # BuildRequires: pyftpdlib
 BuildRequires: tcl-devel
 BuildRequires: tk-devel
-BuildRequires: tkinter
+BuildRequires: python2-tkinter
 BuildRequires: uriparser-devel
 BuildRequires: mesa-libGLU-devel
 BuildRequires: libXmu-devel
@@ -446,6 +448,13 @@ exit 0
 
 
 %changelog
+* Fri Apr 10 2020 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-17.20200305gitef46939
+- Update to the latest available version
+
+* Sun Jun 02 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-16.20190528git9021173
+- Add patch to fix newthread cpu=
+- Increase memlock to 256M
+
 * Wed May 29 2019 Damian Wrobel <dwrobel@ertelnet.rybnik.pl> - 0.1-15.20190528git9021173
 - Update requires for latency-test
 
