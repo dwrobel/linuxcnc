@@ -206,13 +206,13 @@ INCLUDE += $(LIBTIRPC_CFLAGS)
 INTEGER_OVERFLOW_FLAGS := -fwrapv
 OPT := -Os $(INTEGER_OVERFLOW_FLAGS)
 DEBUG := $(DEBUG) -g -Wall
-CFLAGS := $(INCLUDE) $(OPT) $(DEBUG) $(QUIETFLAGS) $(EXTRA_DEBUG) -DULAPI -std=gnu99 -fgnu89-inline
-CXXFLAGS := $(INCLUDE) $(CXXFLAGS) $(CXXQUIETFLAGS) $(EXTRA_DEBUG) -DULAPI $(DEBUG) $(OPT) -Woverloaded-virtual
+CFLAGS := $(INCLUDE) $(OPT) $(DEBUG) $(QUIETFLAGS) $(EXTRA_DEBUG) -DULAPI -std=gnu99 -fgnu89-inline $(X_CFLAGS) $(X_CFLAGS) $(CPPFLAGS) $(CFLAGS)
+CXXFLAGS := $(INCLUDE) $(CXXQUIETFLAGS) $(EXTRA_DEBUG) -DULAPI $(DEBUG) $(OPT) -Woverloaded-virtual $(CPPFLAGS) $(CXXFLAGS)
 
 ifeq ($(RUN_IN_PLACE),yes)
-LDFLAGS := -L$(LIB_DIR) -Wl,-rpath,$(LIB_DIR) $(LIBTIRPC_LIBS)
+LDFLAGS := -L$(LIB_DIR) -Wl,-rpath,$(LIB_DIR) $(LIBTIRPC_LIBS) $(X_LDFLAGS)
 else
-LDFLAGS := -Wl,-rpath-link,../lib $(LIBTIRPC_LIBS)
+LDFLAGS := -Wl,-rpath-link,../lib $(LIBTIRPC_LIBS) $(X_LDFLAGS) $(LDFLAGS)
 endif
 
 # Rules to make .o (object) files
