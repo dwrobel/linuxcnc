@@ -501,6 +501,12 @@ clean: depclean modclean
 	-rm -f ../rtlib/*.$(MODULE_EXT)
 	-rm -f hal/components/conv_*.comp
 
+pycheck:
+	@echo Checking test scripts for python2 compatibility...
+	@find ../tests -type f -exec file {} \; | grep 'Python script' | awk '{sub(/:/, "", $$1); print $$1}' | xargs /usr/bin/env python2 -m py_compile
+	@echo Checking test scripts for python3 compatibility...
+	@find ../tests -type f -exec file {} \; | grep 'Python script' | awk '{sub(/:/, "", $$1); print $$1}' | xargs /usr/bin/env python3 -m py_compile
+
 # So that nothing is built as root, this rule does not depend on the touched
 # files (Note that files in depends/ might be rebuilt, and there's little that
 # can be done about it)
