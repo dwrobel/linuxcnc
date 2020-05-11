@@ -1,4 +1,4 @@
-GCC_GTEQ_470 := $(shell expr `gcc -dumpfullversion | awk -F '.' '{print $$1*10000+$$2*100+$$3}'` \>= 40700)
+GCC_GTEQ_470 := $(shell expr `($(CC) -dumpfullversion 2>/dev/null || $(CC) -dumpversion) | awk -F '.' '{print $$1*10000+$$2*100+$$3}'` \>= 40700)
 ifeq "$(GCC_GTEQ_470)" "1"
 ifdef HAVE_LIBUSB10
 
