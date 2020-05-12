@@ -92,34 +92,6 @@ RTAI_ARCHITECTURE="i386 amd64"
 if [ ! -z "$RTAI_DEV" ]; then
     RTAI_DEV="$RTAI_DEV [i386], $RTAI_DEV [amd64]"
 fi
-# libxenomai-dev does encode the architectures, but we have to resort to awful
-# shell juju to transform it into a proper dependency list
-XENOMAI_DEV="$(apt-cache search -n libxenomai-dev | head -1 | awk '{print $1}')"
-if [ ! -z "$XENOMAI_DEV" ]; then
-    if [ `apt-cache showsrc libxenomai-dev 2>/dev/null | wc -l` -eq 0 ]; then
-        cat 1>&2 <<-EOF
-	Package libxenomai-dev exists, but information about its source package
-	is not available.  This most likely means that you do not have the
-	right deb-src lines in /etc/apt, or that you need to "apt-get update".
-	EOF
-	exit 99
-    fi
-    XENOMAI_ARCHITECTURE="$(apt-cache showsrc libxenomai-dev \
-        | grep ^Architecture: \
-        | head -1 \
-        | tr '[:space:]' '\n' \
-        | tail -n +2 \
-        | grep -vw all \
-        | tr '\n' ' ')"
-    XENOMAI_DEV="$(apt-cache showsrc libxenomai-dev \
-        | grep ^Architecture: \
-        | head -1 \
-        | tr '[:space:]' '\n' \
-        | tail -n +2 \
-        | grep -vw all \
-        | sed "s/.*/$XENOMAI_DEV [&],/" \
-        | tr '\n' ' ')"
-fi
 
 while test $# -ne 0; do
     case "$1" in
