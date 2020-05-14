@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env linuxcnc-python
 
 '''
 configurator.py
@@ -20,7 +20,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 '''
 
+from __future__ import absolute_import
+from __future__ import print_function
 import pygtk
+from six.moves import filter
+from six.moves import range
 pygtk.require('2.0')
 import gtk
 import os
@@ -249,7 +253,7 @@ class configurator:
                 if line.startswith('[EMC]'):
                     break
                 elif not line:
-                    print('[EMC] missing from {}'.format(self.orgIniFile))
+                    print(('[EMC] missing from {}'.format(self.orgIniFile)))
                     return
             while 1:
                 line = inFile.readline()
@@ -503,7 +507,7 @@ class configurator:
                 print('\nError while re-creating links')
                 return
             if version == self.latestUpgrade:
-                print('\nUpgrade not required from v{:0.3f} or later\n'.format(self.latestUpgrade))
+                print(('\nUpgrade not required from v{:0.3f} or later\n'.format(self.latestUpgrade)))
                 if len(sys.argv) == 3 and self.configureType == 'upgrade':
                     msg = '\nPlasmaC automatic upgrade has failed.\n\n'
                     msg += 'Check for the correct version number in:\n\n'
@@ -512,7 +516,7 @@ class configurator:
                     sys.exit()
                 return
             else:
-                print('\nUpgrading from a version before v{:0.3f} to v{:0.3f} or later\n'.format(version + 0.001, self.latestUpgrade))
+                print(('\nUpgrading from a version before v{:0.3f} to v{:0.3f} or later\n'.format(version + 0.001, self.latestUpgrade)))
             self.upgrade_ini_file(version,display)
             self.upgrade_material_file(version)
             self.upgrade_connections_file(version)
@@ -904,7 +908,7 @@ class configurator:
                     buttons_do = True
                 elif buttons_do:
                     if line.startswith('BUTTON_'):
-                        n = int(filter(str.isdigit, line.split('=')[0])) - 1
+                        n = int(list(filter(str.isdigit, line.split('=')[0]))) - 1
                         if (display == 'axis' and n < 5) or (display == 'gmoccapy' and n < 4):
                             if '_NAME' in line:
                                 buttons[n][0] = line
@@ -912,9 +916,9 @@ class configurator:
                                 buttons[n][1] = line
                         else:
                             if display == 'axis':
-                                print('Limit of 5 user buttons:\n"{}" is invalid\n'.format(line.strip()))
+                                print(('Limit of 5 user buttons:\n"{}" is invalid\n'.format(line.strip())))
                             elif display == 'gmoccapy':
-                                print('Limit of 4 user buttons:\n"{}" is invalid\n'.format(line.strip()))
+                                print(('Limit of 4 user buttons:\n"{}" is invalid\n'.format(line.strip())))
                     elif 'removing z axis moves' in line:
                         if display == 'axis':
                             outFile.write('# for the five user buttons in the main window\n')
@@ -929,7 +933,7 @@ class configurator:
                             'BUTTON_11_NAME           = \nBUTTON_11_CODE           = \nBUTTON_11_IMAGE          = \n'\
                             'BUTTON_12_NAME           = \nBUTTON_12_CODE           = \nBUTTON_12_IMAGE          = \n'\
                             'BUTTON_13_NAME           = \nBUTTON_13_CODE           = \nBUTTON_13_IMAGE          = \n'\
-                            'BUTTON_14_NAME           = PlasmaC\User Guide\n'\
+                            'BUTTON_14_NAME           = PlasmaC\\User Guide\n'\
                             'BUTTON_14_CODE           = %xdg-open http://linuxcnc.org/docs/devel/html/plasma/plasmac-user-guide.html\n'\
                             'BUTTON_14_IMAGE          = \n'\
                             'BUTTON_15_NAME           = \nBUTTON_15_CODE           = \nBUTTON_15_IMAGE          = \n'\
