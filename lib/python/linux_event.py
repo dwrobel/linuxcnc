@@ -14,7 +14,10 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+from __future__ import absolute_import
 import struct, fcntl, array, os, select, glob, fnmatch, time, re
+from six.moves import map
+from six.moves import range
 
 size_shift = 16
 def SZ(a,b): return a | (b<<size_shift)

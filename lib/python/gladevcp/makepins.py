@@ -16,11 +16,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
-import gtk
+from gi.repository import Gtk
 import hal
-import gtk.glade
-import gobject
+import Gtk.glade
+from gi.repository import GObject
 import getopt
 
 from .hal_widgets import _HalWidgetBase
@@ -32,8 +34,8 @@ from gladevcp.gladebuilder import widget_name
 class GladePanel():
     def on_window_destroy(self, widget, data=None):
         self.hal.exit()
-        gobject.source_remove(self.timer)
-        gtk.main_quit()
+        GObject.source_remove(self.timer)
+        Gtk.main_quit()
 
     def __init__(self,halcomp,xmlname,builder,buildertype):
         
@@ -52,7 +54,7 @@ class GladePanel():
                 widget.hal_init(self.hal, idname, self)
                 self.widgets[idname] = widget
 
-        self.timer = gobject.timeout_add(100, self.update)   
+        self.timer = GObject.timeout_add(100, self.update)   
                
     def get_handler_obj(self):
         return self.extension_obj

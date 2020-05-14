@@ -19,60 +19,62 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
-import gtk
-import gobject
-import pango
-import hal_actions
+from gi.repository import Gtk
+from gi.repository import GObject
+from gi.repository import Pango
+from . import hal_actions
 import pyngcgui
 g_module = os.path.basename(__file__)
 #-----------------------------------------------------------------------------
 # class to make a gladevcp widget:
-class PyNgcGui(gtk.Frame,hal_actions._EMC_ActionBase):
+class PyNgcGui(Gtk.Frame,hal_actions._EMC_ActionBase):
     """PyNgcGui -- gladevcp widget"""
     __gtype_name__  = 'PyNgcGui'
     __gproperties__ = {
-     'use_keyboard' :      (gobject.TYPE_BOOLEAN
+     'use_keyboard' :      (GObject.TYPE_BOOLEAN
                            ,'Use Popup Keyboard'
                            ,'Yes or No'
                            ,False
-                           ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                           ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                            ),
-     'debug' :             (gobject.TYPE_BOOLEAN
+     'debug' :             (GObject.TYPE_BOOLEAN
                            ,'Debug'
                            ,'Yes or No'
                            ,False
-                           ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                           ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                            ),
-     'verbose' :           (gobject.TYPE_BOOLEAN
+     'verbose' :           (GObject.TYPE_BOOLEAN
                            ,'Verbose'
                            ,'Yes or No'
                            ,False
-                           ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                           ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                            ),
-     'send_function_name': (gobject.TYPE_STRING
+     'send_function_name': (GObject.TYPE_STRING
                            ,'Send Function'
                            ,'default_send | send_to_axis | dummy_send'
                            ,'default_send'
-                           ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                           ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                            ),
-     'send_to_dir':        (gobject.TYPE_STRING
+     'send_to_dir':        (GObject.TYPE_STRING
                            ,'Send to dir'
                            ,'None|touchy|dirname  None(default:[DISPLAY]PROGRAM_PREFIX'
                            ,''
-                           ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                           ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                            ),
-     'gtk_theme_name':     (gobject.TYPE_STRING
+     'gtk_theme_name':     (GObject.TYPE_STRING
                            ,'GTK+ Theme Name'
                            ,'default | name_of_gtk+_theme'
                            ,'Follow System Theme'
-                           ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                           ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                            ),
-     'control_font_name':  (gobject.TYPE_STRING
+     'control_font_name':  (GObject.TYPE_STRING
                            ,'Control Font'
                            ,'example: Sans 10'
                            ,'Sans 10'
-                           ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                           ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                            ),
                      }
 
@@ -86,18 +88,18 @@ class PyNgcGui(gtk.Frame,hal_actions._EMC_ActionBase):
         self.property_dict = {}
         for name in self.__gproperties.keys():
             gtype = self.__gproperties[name][0]
-            if (   gtype == gobject.TYPE_BOOLEAN
-                or gtype == gobject.TYPE_STRING):
+            if (   gtype == GObject.TYPE_BOOLEAN
+                or gtype == GObject.TYPE_STRING):
                 ty,lbl,tip,dflt,other = self.__gproperties[name]
-            if (   gtype == gobject.TYPE_INT
-                or gtype == gobject.TYPE_FLOAT):
+            if (   gtype == GObject.TYPE_INT
+                or gtype == GObject.TYPE_FLOAT):
                 ty,lbl,tip,minv,maxv,dflt,other = self.__gproperties[name]
             self.property_dict[name] = dflt
-        gobject.timeout_add(1,self.go_ngcgui) # deferred
+        GObject.timeout_add(1,self.go_ngcgui) # deferred
 
     def do_get_property(self,property):
         name = property.name.replace('-', '_')
-        if name in self.property_dict.keys():
+        if name in list(self.property_dict.keys()):
             return self.property_dict[name]
         else:
             raise AttributeError(_('%s:unknown property %s')
@@ -105,10 +107,8 @@ class PyNgcGui(gtk.Frame,hal_actions._EMC_ActionBase):
 
     def do_set_property(self,property,value):
         name = property.name.replace('-','_')
-        if name not in self.__gproperties.keys():
-            raise(AttributeError
-                 ,_('%s:pyngcgui:do_set_property: unknown <%s>')
-                 % (g_module,name))
+        if name not in list(self.__gproperties.keys()):
+            raise AttributeError
         else:
             pyngcgui.vprint('SET P[%s]=%s' % (name,value))
             self.property_dict[name] = value
@@ -122,7 +122,7 @@ class PyNgcGui(gtk.Frame,hal_actions._EMC_ActionBase):
             ,control_font_name   = self.property_dict['control_font_name']
             ,gtk_theme_name      = self.property_dict['gtk_theme_name']
             )
-        gobject.timeout_add(1,self.remove_unwanted_label)
+        GObject.timeout_add(1,self.remove_unwanted_label)
 
     def remove_unwanted_label(self):
         # coerce removal of unwanted label
@@ -139,7 +139,7 @@ class PyNgcGui(gtk.Frame,hal_actions._EMC_ActionBase):
                     ,gtk_theme_name="Follow System Theme"
                     ):
 
-        thenotebook = gtk.Notebook()
+        thenotebook = Gtk.Notebook()
         self.add(thenotebook) # tried with self=VBox,HBox,Frame
                               # Frame shows up best in glade designer
 
@@ -152,11 +152,11 @@ class PyNgcGui(gtk.Frame,hal_actions._EMC_ActionBase):
         elif send_function_name == 'send_to_axis': send_function = pyngcgui.send_to_axis
         elif send_function_name == 'default_send': send_function = pyngcgui.default_send
         else:
-            print(_('%s:unknown send_function<%s>')
-                  % (g_module,send_function_name))
+            print((_('%s:unknown send_function<%s>')
+                  % (g_module,send_function_name)))
 
         if control_font_name is not None:
-           control_font = pango.FontDescription(control_font_name)
+           control_font = Pango.FontDescription(control_font_name)
 
         auto_file = None # use default behavior
 

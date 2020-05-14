@@ -1,7 +1,12 @@
+from __future__ import absolute_import
+from __future__ import print_function
 from minigl import *
 import math
 import array, itertools
 import sys
+from six.moves import map
+from six import unichr
+from six.moves import range
 
 if sys.version_info[0] == 3:
     def use_pango_font(font, start, count, will_call_prepost=False):
@@ -70,7 +75,7 @@ if sys.version_info[0] == 3:
                     pass
                     glDrawPixels(w, h, GL_LUMINANCE, GL_UNSIGNED_BYTE, a.tostring())
                 except Exception as e:
-                    print("glnav Exception ",e)
+                    print(("glnav Exception ",e))
 
             glBitmap(0, 0, 0, 0, w, -h+d, ''.encode())
             if not will_call_prepost:
@@ -82,7 +87,7 @@ if sys.version_info[0] == 3:
 else:
     def use_pango_font(font, start, count, will_call_prepost=False):
         import pango, cairo, pangocairo
-        fontDesc = pango.FontDescription(font)
+        fontDesc = Pango.FontDescription(font)
         a = array.array('b', itertools.repeat(0, 256*256))
         surface = cairo.ImageSurface.create_for_data(a, cairo.FORMAT_A8, 256, 256)
         context = pangocairo.CairoContext(cairo.Context(surface))
@@ -92,7 +97,7 @@ else:
         layout.set_font_description(fontDesc)
         metrics = font.get_metrics()
         descent = metrics.get_descent()
-        d = pango.PIXELS(descent)
+        d = Pango.PIXELS(descent)
         linespace = metrics.get_ascent() + metrics.get_descent()
         width = metrics.get_approximate_char_width()
 
@@ -128,7 +133,7 @@ else:
             context.show_layout(layout)
             context.restore()
 
-            w, h = pango.PIXELS(w), pango.PIXELS(h)
+            w, h = Pango.PIXELS(w), Pango.PIXELS(h)
             glNewList(base+i, GL_COMPILE)
             glBitmap(0, 0, 0, 0, 0, h-d, '');
             if not will_call_prepost: pango_font_pre()
@@ -138,7 +143,7 @@ else:
             glEndList()
 
         glPopClientAttrib()
-        return base, pango.PIXELS(width), pango.PIXELS(linespace)
+        return base, Pango.PIXELS(width), Pango.PIXELS(linespace)
 
 
 def pango_font_pre(rgba=(1., 1., 0., 1.)):

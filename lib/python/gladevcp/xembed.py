@@ -4,7 +4,8 @@
 XEmbed helper functions to allow correct embeding inside Axis
 """
 
-import gtk
+from __future__ import absolute_import
+from gi.repository import Gtk
 
 def reparent(window, parent):
     """ Forced reparent. When reparenting Gtk applications into Tk
@@ -16,7 +17,7 @@ def reparent(window, parent):
     if not parent:
         return window
 
-    plug = gtk.Plug(int(parent))
+    plug = Gtk.Plug(int(parent))
     plug.show()
 
     d = display.Display()
@@ -41,7 +42,7 @@ def add_plug(window):
     """Replace top level with a plug so it can be reparented.
     This doesn't actually reparent the widget
     """
-    plug = gtk.Plug(0)
+    plug = Gtk.Plug(0)
     plug.show()
     for c in window.get_children():
         window.remove(c)
@@ -73,7 +74,7 @@ def keyboard_forward(window, forward):
     d = display.Display()
     fw = drawable.Window(d.display, forward, 0)
 
-    ks = gtk.keysyms
+    ks = Gtk.keysyms
     ignore = [ ks.Tab, ks.Page_Up, ks.Page_Down
              , ks.KP_Page_Up, ks.KP_Page_Down
              , ks.Left, ks.Right, ks.Up, ks.Down
@@ -83,9 +84,9 @@ def keyboard_forward(window, forward):
 
     def gtk2xlib(e, fw, g, type=None):
         if type is None: type = e.type
-        if type == gtk.gdk.KEY_PRESS:
+        if type == Gdk.KEY_PRESS:
             klass = event.KeyPress
-        elif type == gtk.gdk.KEY_RELEASE:
+        elif type == Gdk.KEY_RELEASE:
             klass = event.KeyRelease
         else:
             return
@@ -108,5 +109,5 @@ def keyboard_forward(window, forward):
 
     window.connect_after("key-press-event", forward, fw)
     window.connect("key-release-event", forward, fw)
-    window.add_events(gtk.gdk.KEY_PRESS_MASK)
-    window.add_events(gtk.gdk.KEY_RELEASE_MASK)
+    window.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+    window.add_events(Gdk.EventMask.KEY_RELEASE_MASK)

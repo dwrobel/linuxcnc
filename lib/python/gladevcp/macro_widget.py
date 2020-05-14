@@ -15,6 +15,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os, time, string
 
 import gobject, gtk
@@ -23,20 +25,21 @@ from .hal_widgets import _HalWidgetBase
 import linuxcnc
 from hal_glib import GStat
 from .hal_actions import _EMC_ActionBase, ensure_mode
+from six.moves import filter
 # path to TCL for external programs eg. halshow
 try:
     TCLPATH = os.environ['LINUXCNC_TCL_DIR']
 except:
     pass
 
-class MacroSelect(gtk.VBox, _EMC_ActionBase):
+class MacroSelect(Gtk.VBox, _EMC_ActionBase):
     __gtype_name__ = 'MacroSelect'
     __gsignals__ = {
-                    'macro-submitted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,gobject.TYPE_STRING,)),
+                    'macro-submitted': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,GObject.TYPE_STRING,)),
                     }
 
     def __init__(self, *a, **kw):
-        gtk.VBox.__init__(self, *a, **kw)
+        GObject.GObject.__init__(self, *a, **kw)
         self.gstat = GStat()
         # if 'NO_FORCE_HOMING' is true, MDI  commands are allowed before homing.
         try:
@@ -53,13 +56,13 @@ class MacroSelect(gtk.VBox, _EMC_ActionBase):
         #path = self.ini.find('DISPLAY', 'MDI_HISTORY_FILE') or '~/.axis_mdi_history'
         self.foldername = os.path.expanduser(sub_path)
 
-        self.model = gtk.ListStore(str)
+        self.model = Gtk.ListStore(str)
 
-        self.tv = gtk.TreeView()
+        self.tv = Gtk.TreeView()
         self.tv.set_model(self.model)
-        self.cell = gtk.CellRendererText()
+        self.cell = Gtk.CellRendererText()
 
-        self.col = gtk.TreeViewColumn("Macro Commands")
+        self.col = Gtk.TreeViewColumn("Macro Commands")
         self.col.pack_start(self.cell, True)
         self.col.add_attribute(self.cell, 'text', 0)
 
@@ -68,13 +71,13 @@ class MacroSelect(gtk.VBox, _EMC_ActionBase):
         self.tv.set_reorderable(False)
         self.tv.set_headers_visible(True)
 
-        scroll = gtk.ScrolledWindow()
+        scroll = Gtk.ScrolledWindow()
         scroll.add(self.tv)
-        scroll.props.hscrollbar_policy = gtk.POLICY_AUTOMATIC
-        scroll.props.vscrollbar_policy = gtk.POLICY_AUTOMATIC
+        scroll.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
+        scroll.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
 
-        self.entry = gtk.Entry()
-        self.entry.set_icon_from_stock(gtk.ENTRY_ICON_SECONDARY, 'gtk-ok')
+        self.entry = Gtk.Entry()
+        self.entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, 'gtk-ok')
 
         self.entry.connect('activate', self.submit)
         self.entry.connect('icon-press', self.submit)
@@ -143,7 +146,7 @@ class MacroSelect(gtk.VBox, _EMC_ActionBase):
         idx = w.get_cursor()[0]
         if idx is None:
             return True
-        if gtk.gdk.keyval_name(event.keyval) == 'Return':
+        if Gdk.keyval_name(event.keyval) == 'Return':
             self.entry.set_text(self.model[idx][0])
             self.entry.grab_focus()
             return True
@@ -168,20 +171,20 @@ class MacroSelect(gtk.VBox, _EMC_ActionBase):
 # Must linuxcnc running to see anything
 def main(filename = None):
     def macro_callback(widget,path,cmd):
-        print(cmd,path)
+        print((cmd,path))
 
-    window = gtk.Dialog("Macro Test dialog",
+    window = Gtk.Dialog("Macro Test dialog",
                    None,
-                   gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                    gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                   Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                   (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
+                    Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT))
     widget = MacroSelect()
     widget.connect("macro-submitted",macro_callback)
     window.vbox.add(widget)
-    window.connect("destroy", gtk.main_quit)
+    window.connect("destroy", Gtk.main_quit)
     window.show_all()
     response = window.run()
-    if response == gtk.RESPONSE_ACCEPT:
+    if response == Gtk.ResponseType.ACCEPT:
        print("True")
     else:
        print("False")
