@@ -32,11 +32,11 @@ Optional __init__() args:
   use_coord_buttons  (default = True)         Enable coord buttons
 
 Required objects for glade_file:
-  gtk.Window (Main window)
-  gtk.Entry  (Entry for display)
+  Gtk.Window (Main window)
+  Gtk.Entry  (Entry for display)
 
 Optional objects for galde_file:
-  gtk.*Box:  (Box for coord buttons)
+  Gtk.*Box:  (Box for coord buttons)
 
 All buttons use a single handler named 'on_click'.
 The PopupKeyboard class recognizes buttons by their LABEL.
@@ -58,19 +58,19 @@ from __future__ import print_function
 import linuxcnc
 import sys
 import os
-import pango
+from gi.repository import Pango
 from six.moves import range
 
 g_ui_dir = linuxcnc.SHARE + "/linuxcnc"
 
 try:
-    import pygtk
-    pygtk.require('2.0')
+    import gi
+    gi.require_version('Gtk', '3.0')
 except:
     pass
 
 try:
-    import gtk
+    from gi.repository import Gtk
 except ImportError as msg:
     print(('GTK not available: %s' % msg))
     sys.exit(1)
@@ -93,7 +93,7 @@ class PopupKeyboard:
         self.use_coord_buttons = use_coord_buttons
 
         try:
-            import gtk.glade
+            import Gtk.glade
         except ImportError as detail:
             print(('ImportError:',detail))
         except Exception as msg:
@@ -101,7 +101,7 @@ class PopupKeyboard:
             print((sys.exc_info()))
             sys.exit(1)
 
-        self.builder = gtk.Builder()
+        self.builder = Gtk.Builder()
         self.builder.add_from_file(glade_file)
         self.builder.connect_signals(self)
 
@@ -125,7 +125,7 @@ class PopupKeyboard:
                 self.coord_buttons.hide()
 
         # prevent closing of dialog by window manager, escape key , etc
-        # http://faq.pygtk.org/index.py?file=faq10.013.htp&req=show
+        # http://faq.pyGtk.org/index.py?file=faq10.013.htp&req=show
         self.top.connect("response",    self.on_response) #reqd
         self.top.connect("delete-event",self.on_delete)   #reqd
         self.top.connect("close",       self.on_close)    #probably not reqd
@@ -134,21 +134,21 @@ class PopupKeyboard:
         # and show iff corresponding axis is in axis_mask
         self.label_to_btn = {}
         for btn in self.builder.get_objects():
-            if type(btn) is not gtk.Button:
+            if type(btn) is not Gtk.Button:
                 continue
             self.label_to_btn[btn.get_label().upper()] = btn
 
-            if isinstance(btn.child, gtk.Label):
-                lbl = btn.child
-                lbl.modify_font(pango.FontDescription(fontname))
+            if isinstance(btn.get_child(), Gtk.Label):
+                lbl = btn.get_child()
+                lbl.modify_font(Pango.FontDescription(fontname))
 
         if use_coord_buttons: self.support_coord_buttons()
 
         # making it insensitive clears the initial selection region
-        self.num_entry.set_state(gtk.STATE_INSENSITIVE)
-        self.num_entry.modify_text(gtk.STATE_INSENSITIVE
-                      ,gtk.gdk.color_parse('black'))
-        self.num_entry.modify_font(pango.FontDescription(fontname))
+        self.num_entry.set_state(Gtk.StateType.INSENSITIVE)
+        self.num_entry.modify_text(Gtk.StateType.INSENSITIVE
+                      ,Gdk.color_parse('black'))
+        self.num_entry.modify_font(Pango.FontDescription(fontname))
 
     def support_coord_buttons(self):
         try:
@@ -187,7 +187,7 @@ class PopupKeyboard:
         if tname is None:
             return
         screen   = self.dialog.get_screen()
-        settings = gtk.settings_get_for_screen(screen)
+        settings = Gtk.Settings.get_for_screen(screen)
         settings.set_string_property('gtk-theme-name',tname,"")
         theme    = settings.get_property('gtk-theme-name')
 
@@ -308,5 +308,5 @@ if __name__ == "__main__":
         if result=='':
             sys.exit(0)
         ct += 1
-    gtk.main()
+    Gtk.main()
 # vim: sts=4 sw=4 et

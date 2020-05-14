@@ -32,6 +32,8 @@
 # 'a' thru 'd', and 4 bytes for chunk 'e'.  This library allows other
 # chunks, and assume that all have 4 byte lengths, except 'a' thru 'd'.
 #
+from __future__ import absolute_import
+from __future__ import print_function
 import struct
 
 class BitFile:

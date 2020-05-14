@@ -71,17 +71,20 @@ Callbacks are provided for the following buttons actions
   on_show_limits_clicked
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
-import gtk
+from gi.repository import Gtk
 import gladevcp.hal_actions  # reqd for Builder
 import linuxcnc
 import time
 import subprocess
 import gettext
 import datetime
-import gobject
-import glib # for glib.GError
+from gi.repository import GObject
+import glib # for GLib.GError
+import six
 
 g_ui_dir          = linuxcnc.SHARE + "/linuxcnc"
 g_periodic_secs   = 1 # integer
@@ -91,7 +94,7 @@ g_progname        = os.path.basename(sys.argv[0])
 g_verbose         = False
 
 LOCALEDIR = linuxcnc.SHARE + "/locale"
-gettext.install("linuxcnc", localedir=LOCALEDIR, unicode=True)
+gettext.install("linuxcnc", localedir=LOCALEDIR, six.text_type=True)
 
 def ini_check ():
     """set environmental variable and change directory"""
@@ -118,8 +121,8 @@ def get_linuxcnc_ini_file():
     p,e = ps.communicate()
 
     if ps.returncode:
-        print(_('get_linuxcnc_ini_file: stdout= %s') % p)
-        print(_('get_linuxcnc_ini_file: stderr= %s') % e)
+        print((_('get_linuxcnc_ini_file: stdout= %s') % p))
+        print((_('get_linuxcnc_ini_file: stderr= %s') % e))
         return None
 
     ans = p.split()[p.split().index('-ini')+1]
@@ -145,12 +148,12 @@ class GremlinView():
         if (glade_file == None):
             glade_file = os.path.join(g_ui_dir,'gremlin_view.ui')
 
-        bldr = gtk.Builder()
+        bldr = Gtk.Builder()
         try:
             bldr.add_from_file(glade_file)
-        except glib.GError as detail:
-            print('\nGremlinView:%s\n' % detail)
-            raise glib.GError(detail) # re-raise
+        except GLib.GError as detail:
+            print(('\nGremlinView:%s\n' % detail))
+            raise GLib.GError(detail) # re-raise
 
         # required objects:
         self.topwindow = bldr.get_object('gremlin_view_window')
@@ -181,7 +184,7 @@ class GremlinView():
                 else:
                     obj.set_group(found_view)
         if found_view is None:
-            print('%s:Expected to find "select_*_view"' % __file__)
+            print(('%s:Expected to find "select_*_view"' % __file__))
 
         check_button_objects = ['enable_dro'
                                ,'show_machine_speed'
@@ -198,8 +201,8 @@ class GremlinView():
                 obj.set_active(True)
             else:
                 if g_verbose:
-                    print('%s: Optional object omitted <%s>'
-                          % (__file__,objname))
+                    print(('%s: Optional object omitted <%s>'
+                          % (__file__,objname)))
 
         # show_metric: use ini file
 #FIXME  show_metric,lunits s/b mandatory?
@@ -209,7 +212,7 @@ class GremlinView():
             lunits = self.halg.inifile.find('TRAJ','LINEAR_UNITS')
         except AttributeError:
             if g_verbose:
-                print('%s: Problem for <%s>' % (__file__,objname))
+                print(('%s: Problem for <%s>' % (__file__,objname)))
 
         if linuxcnc_running:
             if   lunits == 'inch':
@@ -273,7 +276,7 @@ class GremlinView():
                 self.preview_file(None)
             except linuxcnc.error as detail:
                 print('linuxcnc.error')
-                print('        detail=',detail)
+                print(('        detail=',detail))
 
         try:
             self.last_file = self.halg._current_file
@@ -290,7 +293,7 @@ class GremlinView():
             # print "REPARENT:",gtk_theme_name
             screen   = self.halg.get_screen()
 
-        settings = gtk.settings_get_for_screen(screen)
+        settings = Gtk.Settings.get_for_screen(screen)
         systname = settings.get_property("gtk-theme-name")
         if (   (gtk_theme_name is None)
             or (gtk_theme_name == "")
@@ -311,8 +314,8 @@ class GremlinView():
         self.ct = 0
         if self.parent is None: self.topwindow.deiconify()
         self._periodic('BEGIN')
-        gobject.timeout_add_seconds(g_periodic_secs,self._periodic,'Continue')
-        # or use gobject.timeout_add() interval units in mS
+        GObject.timeout_add_seconds(g_periodic_secs,self._periodic,'Continue')
+        # or use GObject.timeout_add() interval units in mS
 
     def _periodic(self,arg):
         # print "_periodic:",self.ct,arg
@@ -372,7 +375,7 @@ class GremlinView():
             self.halg.load(filename or None)
         except Exception as detail:
             if self.alive:
-                print("file load fail:",Exception,detail)
+                print(("file load fail:",Exception,detail))
             pass
         getattr(self.halg,'set_view_%s' % self.my_view)()
         self.halg.show()
@@ -382,50 +385,50 @@ class GremlinView():
 
     def _topwindowquit(self,w):
         self.running = False # stop periodic checks
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def expose(self):
         self.halg.expose()
 
     def on_zoomin_pressed(self,w):
-        while w.get_state() == gtk.STATE_ACTIVE:
+        while w.get_state() == Gtk.StateType.ACTIVE:
             self.halg.zoomin()
             time.sleep(g_move_delay_secs)
-            gtk.main_iteration_do()
+            Gtk.main_iteration_do()
 
     def on_zoomout_pressed(self,w):
-        while w.get_state() == gtk.STATE_ACTIVE:
+        while w.get_state() == Gtk.StateType.ACTIVE:
             self.halg.zoomout()
             time.sleep(g_move_delay_secs)
-            gtk.main_iteration_do()
+            Gtk.main_iteration_do()
 
     def on_pan_x_minus_pressed(self,w):
-        while w.get_state() == gtk.STATE_ACTIVE:
+        while w.get_state() == Gtk.StateType.ACTIVE:
             self.x -= g_delta_pixels
             self.halg.translate(self.x,self.y)
             time.sleep(g_move_delay_secs)
-            gtk.main_iteration_do()
+            Gtk.main_iteration_do()
 
     def on_pan_x_plus_pressed(self,w):
-        while w.get_state() == gtk.STATE_ACTIVE:
+        while w.get_state() == Gtk.StateType.ACTIVE:
             self.x += g_delta_pixels
             self.halg.translate(self.x,self.y)
             time.sleep(g_move_delay_secs)
-            gtk.main_iteration_do()
+            Gtk.main_iteration_do()
 
     def on_pan_y_minus_pressed(self,w):
-        while w.get_state() == gtk.STATE_ACTIVE:
+        while w.get_state() == Gtk.StateType.ACTIVE:
             self.y += g_delta_pixels
             self.halg.translate(self.x,self.y)
             time.sleep(g_move_delay_secs)
-            gtk.main_iteration_do()
+            Gtk.main_iteration_do()
 
     def on_pan_y_plus_pressed(self,w):
-        while w.get_state() == gtk.STATE_ACTIVE:
+        while w.get_state() == Gtk.StateType.ACTIVE:
             self.y -= g_delta_pixels
             self.halg.translate(self.x,self.y)
             time.sleep(g_move_delay_secs)
-            gtk.main_iteration_do()
+            Gtk.main_iteration_do()
 
     def on_clear_live_plotter_clicked(self,w):
         self.halg.clear_live_plotter()
@@ -509,7 +512,7 @@ def standalone_gremlin_view():
     #---------------------------------------
     def usage(msg=None):
 
-        print(("""\n
+        print((("""\n
 Usage:   %s [options]\n
 Options: [-h | --help]
          [-v | --verbose]
@@ -518,9 +521,9 @@ Options: [-h | --help]
          [-f | --file]   glade_file
 
 Note: linuxcnc must be running on same machine
-""") % g_progname)
+""") % g_progname))
         if msg:
-            print('\n%s' % msg)
+            print(('\n%s' % msg))
     #---------------------------------------
 
     glade_file  = None
@@ -538,7 +541,7 @@ Note: linuxcnc must be running on same machine
                                          )
     except getopt.GetoptError as msg:
         usage()
-        print('GetoptError: %s' % msg)
+        print(('GetoptError: %s' % msg))
         sys.exit(1)
     for opt,arg in options:
         if opt in ('-h','--help'):
@@ -558,10 +561,10 @@ Note: linuxcnc must be running on same machine
                        ,width=width
                        ,height=height
                        )
-        gtk.main()
+        Gtk.main()
     except linuxcnc.error as detail:
-        gtk.main()
-        print('linuxcnc.error:',detail)
+        Gtk.main()
+        print(('linuxcnc.error:',detail))
         usage()
 
 # vim: sts=4 sw=4 et

@@ -27,6 +27,7 @@ When the component is requested to exit with 'halcmd unload', a
 KeyboardInterrupt exception will be raised.
 """
 
+from __future__ import absolute_import
 import _hal
 from _hal import *
 

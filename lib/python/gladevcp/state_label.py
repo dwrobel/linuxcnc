@@ -13,8 +13,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-import gobject
-import gtk
+from __future__ import absolute_import
+from __future__ import print_function
+from gi.repository import GObject
+from gi.repository import Gtk
 
 import hal
 from .hal_widgets import _HalWidgetBase
@@ -22,22 +24,22 @@ from hal_glib import GStat
 
 GSTAT = GStat()
 
-class State_Label(gtk.Label, _HalWidgetBase):
+class State_Label(Gtk.Label, _HalWidgetBase):
     __gtype_name__ = "State_Label"
     __gproperties__ = {
-        'label_type'  : ( gobject.TYPE_INT, 'Label type', '0:metric mode 1:Diameter mode 2:CSS Mode',
-                0, 2, 0, gobject.PARAM_READWRITE|gobject.PARAM_CONSTRUCT),
-        'true_text' : ( gobject.TYPE_STRING, 'True Text',
+        'label_type'  : ( GObject.TYPE_INT, 'Label type', '0:metric mode 1:Diameter mode 2:CSS Mode',
+                0, 2, 0, GObject.PARAM_READWRITE|GObject.PARAM_CONSTRUCT),
+        'true_text' : ( GObject.TYPE_STRING, 'True Text',
                 'Text to display when state is True',
-                "True", gobject.PARAM_READWRITE|gobject.PARAM_CONSTRUCT),
-        'false_text' : ( gobject.TYPE_STRING, 'False Text',
+                "True", GObject.PARAM_READWRITE|GObject.PARAM_CONSTRUCT),
+        'false_text' : ( GObject.TYPE_STRING, 'False Text',
                 'Text to display when state is False',
-                "False", gobject.PARAM_READWRITE|gobject.PARAM_CONSTRUCT),
+                "False", GObject.PARAM_READWRITE|GObject.PARAM_CONSTRUCT),
     }
     __gproperties = __gproperties__
 
     def __init__(self, *a, **kw):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self.true_text = 'True'
         self.false_text = 'False'
         self.label_type = 0
@@ -73,19 +75,19 @@ class State_Label(gtk.Label, _HalWidgetBase):
 
 # for testing without glade editor:
 def main():
-    window = gtk.Dialog("My dialog",
+    window = Gtk.Dialog("My dialog",
                    None,
-                   gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                    gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                   Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                   (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
+                    Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT))
     widget = State_Label()
     widget._hal_init()
     window.vbox.add(widget)
-    window.connect("destroy", gtk.main_quit)
+    window.connect("destroy", Gtk.main_quit)
 
     window.show_all()
     response = window.run()
-    if response == gtk.RESPONSE_ACCEPT:
+    if response == Gtk.ResponseType.ACCEPT:
        print("ok")
     else:
        print("cancel")

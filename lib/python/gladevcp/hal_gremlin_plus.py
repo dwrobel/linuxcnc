@@ -19,11 +19,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 import sys
 import os
-import gtk
+from gi.repository import Gtk
 import gremlin_view
-import gobject
+from gi.repository import GObject
 
 #-----------------------------------------------------------------------------
 # determine if glade interface designer is running
@@ -39,45 +40,45 @@ if 'glade' in sys.argv[0] and 'gladevcp' not in sys.argv[0]:
 g_alive = not g_is_glade
 #-----------------------------------------------------------------------------
 from . import hal_actions
-class HAL_GremlinPlus(gtk.Frame, hal_actions._EMC_ActionBase):
+class HAL_GremlinPlus(Gtk.Frame, hal_actions._EMC_ActionBase):
     """HAL_GremlinPlus: gladevcp widget for gremlin_view.GremlinView
        Provides hal_gremlin with some buttons
     """
     __gtype_name__ = 'HAL_GremlinPlus'
     __gproperties__ = {
-        'debug' :       (gobject.TYPE_BOOLEAN
+        'debug' :       (GObject.TYPE_BOOLEAN
                         ,'Debug'
                         ,'Yes or No'
                         ,False
-                        ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                        ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                         ),
-        'width' :       (gobject.TYPE_INT
+        'width' :       (GObject.TYPE_INT
                         ,'width'
                         ,'min width pixels'
                         ,-1
                         ,(1<<31)-1
                         ,300
-                        ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                        ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                         ),
-        'height' :      (gobject.TYPE_INT
+        'height' :      (GObject.TYPE_INT
                         ,'height'
                         ,'min height pixels'
                         ,-1
                         ,(1<<31)-1
                         ,300
-                        ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                        ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                         ),
-     'glade_file':      (gobject.TYPE_STRING
+     'glade_file':      (GObject.TYPE_STRING
                         ,'glade file name'
                         ,'default or full filename'
                         ,'default'
-                        ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                        ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                         ),
-     'gtk_theme_name':  (gobject.TYPE_STRING
+     'gtk_theme_name':  (GObject.TYPE_STRING
                         ,'GTK+ Theme Name'
                         ,'default | name_of_gtk+_theme'
                         ,'Follow System Theme'
-                        ,gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT
+                        ,GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT
                         ),
                       }
 
@@ -91,18 +92,18 @@ class HAL_GremlinPlus(gtk.Frame, hal_actions._EMC_ActionBase):
         self.property_dict = {}
         for name in self.__gproperties.keys():
             gtype = self.__gproperties[name][0]
-            if (   gtype == gobject.TYPE_BOOLEAN
-                or gtype == gobject.TYPE_STRING):
+            if (   gtype == GObject.TYPE_BOOLEAN
+                or gtype == GObject.TYPE_STRING):
                 ty,lbl,tip,dflt,other = self.__gproperties[name]
-            if (   gtype == gobject.TYPE_INT
-                or gtype == gobject.TYPE_FLOAT):
+            if (   gtype == GObject.TYPE_INT
+                or gtype == GObject.TYPE_FLOAT):
                 ty,lbl,tip,minv,maxv,dflt,other = self.__gproperties[name]
             self.property_dict[name] = dflt
-        gobject.timeout_add(1,self.go_gremlin_view) # defer
+        GObject.timeout_add(1,self.go_gremlin_view) # defer
 
     def do_get_property(self,property):
         name = property.name.replace('-', '_')
-        if name in self.property_dict.keys():
+        if name in list(self.property_dict.keys()):
             return self.property_dict[name]
         else:
             raise AttributeError(_('%s:unknown property %s')
@@ -110,10 +111,8 @@ class HAL_GremlinPlus(gtk.Frame, hal_actions._EMC_ActionBase):
 
     def do_set_property(self,property,value):
         name = property.name.replace('-','_')
-        if name not in self.__gproperties.keys():
-            raise(AttributeError
-                 ,_('%s:do_set_property: unknown <%s>')
-                 % (g_progname,name))
+        if name not in list(self.__gproperties.keys()):
+            raise AttributeError
         else:
             self.property_dict[name] = value
 
@@ -123,7 +122,7 @@ class HAL_GremlinPlus(gtk.Frame, hal_actions._EMC_ActionBase):
             ,glade_file=self.property_dict['glade_file']
             ,gtk_theme_name= self.property_dict['gtk_theme_name']
             )
-        gobject.timeout_add(1,self.remove_unwanted_label)
+        GObject.timeout_add(1,self.remove_unwanted_label)
 
     def remove_unwanted_label(self):
         # coerce removal of unwanted label

@@ -16,6 +16,7 @@
 
 """Wrapper for BWidget family of widgets"""
 
+from __future__ import absolute_import
 __author__ = "Jeff Epler <jepler AT unpy DOT net>"
 
 __all__ = """
@@ -34,7 +35,7 @@ import sys, types
 if sys.version_info[0] == 3:
     import tkinter
 else:
-    import Tkinter as tkinter
+    import six.moves.tkinter as tkinter
 
 def returnswidget(f):
     def w(self, *args, **kw):

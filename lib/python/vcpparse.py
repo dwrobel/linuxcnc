@@ -19,6 +19,8 @@
     Parses a pyVCP XML file and creates widgets by calling pyvcp_widgets.py
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import xml.dom.minidom
 import sys, os
 import linuxcnc
@@ -30,7 +32,7 @@ if sys.version_info[0] == 3:
     import tkinter as Tkinter
     from tkinter import *
 else:
-    from Tkinter import *
+    from six.moves.tkinter import *
 # this statement is required so that stuff from Tkinter
 # is not included in the pydoc documentation __All__ should list all 
 # functions in this module
@@ -49,7 +51,7 @@ def read_file():
     try:
         doc = xml.dom.minidom.parse(filename) 
     except xml.parsers.expat.ExpatError as detail:
-        print("Error: could not open",filename,"!")
+        print(("Error: could not open",filename,"!"))
         print(detail)
         sys.exit(1)
     # find the pydoc element

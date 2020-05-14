@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # vim: sts=4 sw=4 et
 
-import _hal, hal, gobject
+from __future__ import absolute_import
+from __future__ import print_function
+import _hal, hal
+from gi.repository import GObject
 import linuxcnc
 import os
 import math
+from six.moves import range
 
 # constants
 JOGJOINT  = 1
@@ -16,15 +20,15 @@ try:
 except:
     pass
 
-class GPin(gobject.GObject, hal.Pin):
+class GPin(GObject.GObject, hal.Pin):
     __gtype_name__ = 'GPin'
-    __gsignals__ = {'value-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ())}
+    __gsignals__ = {'value-changed': (GObject.SignalFlags.RUN_FIRST, None, ())}
 
     REGISTRY = []
     UPDATE = False
 
     def __init__(self, *a, **kw):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         hal.Pin.__init__(self, *a, **kw)
         self._item_wrap(self._item)
         self._prev = None
@@ -47,7 +51,7 @@ class GPin(gobject.GObject, hal.Pin):
                 p.update()
             except:
                 kill.append(p)
-                print("Error updating pin %s; Removing" % p)
+                print(("Error updating pin %s; Removing" % p))
         for p in kill:
             self.REGISTRY.remove(p)
         return self.UPDATE
@@ -57,7 +61,7 @@ class GPin(gobject.GObject, hal.Pin):
         if GPin.UPDATE:
             return
         GPin.UPDATE = True
-        gobject.timeout_add(timeout, self.update_all)
+        GObject.timeout_add(timeout, self.update_all)
 
     @classmethod
     def update_stop(self, timeout=100):
@@ -77,110 +81,110 @@ class GComponent:
     def __getitem__(self, k): return self.comp[k]
     def __setitem__(self, k, v): self.comp[k] = v
 
-class _GStat(gobject.GObject):
+class _GStat(GObject.GObject):
     '''Emits signals based on linuxcnc status '''
     __gsignals__ = {
-        'periodic': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'state-estop': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'state-estop-reset': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'state-on': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'state-off': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
+        'periodic': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'state-estop': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'state-estop-reset': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'state-on': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'state-off': (GObject.SignalFlags.RUN_FIRST, None, ()),
 
-        'homed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'unhomed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'all-homed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'not-all-homed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'override-limits-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN, gobject.TYPE_PYOBJECT,)),
+        'homed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'unhomed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'all-homed': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'not-all-homed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'override-limits-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN, GObject.TYPE_PYOBJECT,)),
 
-        'hard-limits-tripped': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN, gobject.TYPE_PYOBJECT,)),
+        'hard-limits-tripped': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN, GObject.TYPE_PYOBJECT,)),
 
-        'mode-manual': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'mode-auto': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'mode-mdi': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
+        'mode-manual': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'mode-auto': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'mode-mdi': (GObject.SignalFlags.RUN_FIRST, None, ()),
 
-        'interp-run': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'interp-idle': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'interp-paused': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'interp-reading': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'interp-waiting': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
+        'interp-run': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'interp-idle': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'interp-paused': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'interp-reading': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'interp-waiting': (GObject.SignalFlags.RUN_FIRST, None, ()),
 
-        'jograte-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'jograte-angular-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'jogincrement-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT, gobject.TYPE_STRING)),
-        'jogincrement-angular-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT, gobject.TYPE_STRING)),
+        'jograte-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'jograte-angular-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'jogincrement-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT, GObject.TYPE_STRING)),
+        'jogincrement-angular-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT, GObject.TYPE_STRING)),
 
-        'joint-selection-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'axis-selection-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
+        'joint-selection-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'axis-selection-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
 
-        'program-pause-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'optional-stop-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'block-delete-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
+        'program-pause-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'optional-stop-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'block-delete-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
 
-        'file-loaded': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'reload-display': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'line-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
+        'file-loaded': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'reload-display': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'line-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
 
-        'tool-in-spindle-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'tool-prep-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'tool-info-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        'current-tool-offset': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
+        'tool-in-spindle-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'tool-prep-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'tool-info-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
+        'current-tool-offset': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
 
-        'motion-mode-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'spindle-control-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,gobject.TYPE_INT)),
-        'current-feed-rate': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'current-x-rel-position': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'current-position': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT,
-                            gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,)),
-        'current-z-rotation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'requested-spindle-speed-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'actual-spindle-speed-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
+        'motion-mode-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'spindle-control-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,GObject.TYPE_INT)),
+        'current-feed-rate': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'current-x-rel-position': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'current-position': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,GObject.TYPE_PYOBJECT,
+                            GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT,)),
+        'current-z-rotation': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'requested-spindle-speed-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'actual-spindle-speed-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
 
-        'spindle-override-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'feed-override-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'rapid-override-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
-        'max-velocity-override-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
+        'spindle-override-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'feed-override-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'rapid-override-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
+        'max-velocity-override-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_FLOAT,)),
 
-        'feed-hold-enabled-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
+        'feed-hold-enabled-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
 
-        'itime-mode': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'fpm-mode': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'fpr-mode': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'css-mode': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'rpm-mode': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'radius-mode': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'diameter-mode': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'flood-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'mist-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
+        'itime-mode': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'fpm-mode': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'fpr-mode': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'css-mode': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'rpm-mode': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'radius-mode': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'diameter-mode': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'flood-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'mist-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
 
-        'm-code-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'g-code-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
+        'm-code-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'g-code-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
 
-        'metric-mode-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,)),
-        'user-system-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
+        'metric-mode-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN,)),
+        'user-system-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
 
-        'mdi-line-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING, gobject.TYPE_STRING)),
-        'gcode-line-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'graphics-line-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'graphics-loading-progress': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'graphics-gcode-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'graphics-gcode-properties': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        'graphics-view-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)),
-        'mdi-history-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'machine-log-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'update-machine-log': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING, gobject.TYPE_STRING)),
-        'move-text-lineup': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'move-text-linedown': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'dialog-request': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        'focus-overlay-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN, gobject.TYPE_STRING,
-                            gobject.TYPE_PYOBJECT)),
-        'play-sound': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'virtual-keyboard': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
-        'dro-reference-change-request': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT,)),
-        'show-preference': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'shutdown': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        'error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_STRING)),
-        'general': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        'forced-update': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
+        'mdi-line-selected': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING, GObject.TYPE_STRING)),
+        'gcode-line-selected': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'graphics-line-selected': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'graphics-loading-progress': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'graphics-gcode-error': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'graphics-gcode-properties': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
+        'graphics-view-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING, GObject.TYPE_PYOBJECT)),
+        'mdi-history-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'machine-log-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'update-machine-log': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING, GObject.TYPE_STRING)),
+        'move-text-lineup': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'move-text-linedown': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'dialog-request': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
+        'focus-overlay-changed': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_BOOLEAN, GObject.TYPE_STRING,
+                            GObject.TYPE_PYOBJECT)),
+        'play-sound': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'virtual-keyboard': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_STRING,)),
+        'dro-reference-change-request': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT,)),
+        'show-preference': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'shutdown': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'error': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_INT, GObject.TYPE_STRING)),
+        'general': (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
+        'forced-update': (GObject.SignalFlags.RUN_FIRST, None, ()),
         }
 
     STATES = { linuxcnc.STATE_ESTOP:       'state-estop'
@@ -201,7 +205,7 @@ class _GStat(gobject.GObject):
              }
 
     def __init__(self, stat = None):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self.stat = stat or linuxcnc.stat()
         self.cmd = linuxcnc.command()
         self._status_active = False
@@ -227,7 +231,7 @@ class _GStat(gobject.GObject):
     # we put this in a function so qtvcp
     # can overide it to fix a seg fault
     def set_timer(self):
-        gobject.timeout_add(100, self.update)
+        GObject.timeout_add(100, self.update)
 
     def merge(self):
         self.old['state'] = self.stat.task_state
@@ -960,19 +964,19 @@ class _GStat(gobject.GObject):
             return JOGJOINT
         if self.stat.motion_mode == linuxcnc.TRAJ_MODE_TELEOP:
             return JOGTELEOP
-        print("commands.py: unexpected motion_mode",self.stat.motion_mode)
+        print(("commands.py: unexpected motion_mode",self.stat.motion_mode))
         return JOGTELEOP
 
     def jnum_for_axisnum(self,axisnum):
         if self.stat.kinematics_type != linuxcnc.KINEMATICS_IDENTITY:
-            print("\n%s:\n  Joint jogging not supported for"
-                   "non-identity kinematics"%__file__)
+            print(("\n%s:\n  Joint jogging not supported for"
+                   "non-identity kinematics"%__file__))
             return -1 # emcJogCont() et al reject neg joint/axis no.s
         jnum = trajcoordinates.index( "xyzabcuvw"[axisnum] )
         if jnum > jointcount:
-            print("\n%s:\n  Computed joint number=%d for axisnum=%d "
+            print(("\n%s:\n  Computed joint number=%d for axisnum=%d "
                    "exceeds jointcount=%d with trajcoordinates=%s"
-                   %(__file__,jnum,axisnum,jointcount,trajcoordinates))
+                   %(__file__,jnum,axisnum,jointcount,trajcoordinates)))
             # Note: primary gui should protect for this misconfiguration
             # decline to jog
             return -1 # emcJogCont() et al reject neg joint/axis no.s

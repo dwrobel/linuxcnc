@@ -1,5 +1,6 @@
 """hal library python interface using ctypes ffi interface"""
 
+from __future__ import absolute_import
 from ctypes import*
 
 

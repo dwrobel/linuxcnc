@@ -15,11 +15,12 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+from __future__ import absolute_import
 import sys
 if sys.version_info[0] == 3:
     import tkinter
 else:
-    import Tkinter as tkinter
+    import six.moves.tkinter as tkinter
 
 def properties(app, title, names, props):
     t = tkinter.Toplevel(app)
