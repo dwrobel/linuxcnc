@@ -1172,7 +1172,7 @@ modules: $(patsubst %.o,../rtlib/%.so,$(obj-m))
 	$(Q)ld -d -r -o objects/$*.tmp $^
 	$(Q)objcopy -j .rtapi_export -O binary objects/$*.tmp objects/$*.sym
 	$(Q)(echo '{ global : '; tr -s '\0' < objects/$*.sym | xargs -r0 printf '%s;\n' | grep .; echo 'local : * ; };') > objects/$*.ver
-	$(Q)$(CC) -shared -Bsymbolic $(LDFLAGS) -Wl,--version-script,objects/$*.ver -o $@ $^ -lm
+	$(Q)$(CC) $(CFLAGS) -shared -Bsymbolic $(LDFLAGS) -Wl,--version-script,objects/$*.ver -o $@ $^ -lm
 
 RTFLAGS += -fno-strict-aliasing -fwrapv
 
@@ -1181,7 +1181,7 @@ $(sort $(RTOBJS)) : objects/rt%.o : %.c
 	$(ECHO) Compiling realtime $<
 	@rm -f $@
 	@mkdir -p $(dir $@)
-	$(Q)$(CC) -c $(OPT) $(DEBUG) $(EXTRA_DEBUG) -DRTAPI \
+	$(Q)$(CC) -c $(OPT) $(DEBUG) $(EXTRA_DEBUG) $(CFLAGS) -UULAPI -DRTAPI \
 		$(EXTRA_CFLAGS) \
 		-MP -MD -MF "${@:.o=.d}" -MT "$@" \
 		$< -o $@
