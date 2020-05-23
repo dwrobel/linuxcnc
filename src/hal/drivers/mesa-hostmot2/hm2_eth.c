@@ -476,6 +476,7 @@ static int shell(char *command) {
     else return status;
 }
 
+#if 0
 static int eshellf(char *fmt, ...) {
     char commandbuf[1024];
     va_list ap;
@@ -489,6 +490,7 @@ static int eshellf(char *fmt, ...) {
     LL_PRINT("ERROR: Failed to execute '%s'\n", commandbuf);
     return -EINVAL;
 }
+#endif
 
 static bool chain_exists() {
     int result =
@@ -496,7 +498,7 @@ static bool chain_exists() {
     return result == EXIT_SUCCESS;
 }
 
-static int iptables_state = -1;
+static int iptables_state = 0;
 static bool use_iptables() {
     if(iptables_state == -1) {
         if(!chain_exists()) {
@@ -613,6 +615,7 @@ static int install_iptables_board(int sockfd) {
 }
 
 static int install_iptables_perinterface(const char *ifbuf) {
+#if 0
     // without this rule, 'ping' spews a lot of messages like
     //    From 192.168.1.1 icmp_seq=5 Packet filtered
     // many times for each ping packet sent.  With this rule,
@@ -631,6 +634,7 @@ static int install_iptables_perinterface(const char *ifbuf) {
     res = eshellf("/sbin/sysctl -q net.ipv6.conf.%s.disable_ipv6=1", ifbuf);
     if(res < 0) return res;
 
+#endif
     return 0;
 }
 
