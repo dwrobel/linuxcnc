@@ -613,11 +613,8 @@ struct PosixTask : rtapi_task
 
 struct Posix : RtapiApp
 {
-    Posix(int policy = SCHED_FIFO) : RtapiApp(policy), do_thread_lock(policy != SCHED_FIFO) {
+    Posix(int policy = SCHED_FIFO) : RtapiApp(policy) {
         pthread_once(&key_once, init_key);
-        if(do_thread_lock) {
-            pthread_once(&lock_once, init_lock);
-        }
     }
     int task_delete(int id);
     int task_start(int task_id, unsigned long period_nsec);
@@ -634,7 +631,6 @@ struct Posix : RtapiApp
     void do_outb(unsigned char value, unsigned int port);
     int run_threads(int fd, int (*callback)(int fd));
     static void *wrapper(void *arg);
-    bool do_thread_lock;
 
     static pthread_once_t key_once;
     static pthread_key_t key;
@@ -1065,10 +1061,6 @@ void *Posix::wrapper(void *arg)
   pthread_setspecific(key, arg);
   set_namef("rtapi_app:T#%d", task->id);
 
-  Posix &papp = reinterpret_cast<Posix&>(App());
-  if(papp.do_thread_lock)
-      pthread_mutex_lock(&papp.thread_lock);
-
   struct timespec now;
   clock_gettime(RTAPI_CLOCK, &now);
   rtapi_timespec_advance(task->nextstart, now, task->period + task->pll_correction);
@@ -1110,8 +1102,6 @@ int Posix::task_self() {
 }
 
 void Posix::wait() {
-    if(do_thread_lock)
-        pthread_mutex_unlock(&thread_lock);
     pthread_testcancel();
     struct rtapi_task *task = reinterpret_cast<rtapi_task*>(pthread_getspecific(key));
     rtapi_timespec_advance(task->nextstart, task->nextstart, task->period + task->pll_correction);
@@ -1127,8 +1117,6 @@ void Posix::wait() {
         int res = rtapi_clock_nanosleep(RTAPI_CLOCK, TIMER_ABSTIME, &task->nextstart, nullptr, &now);
         if(res < 0) perror("clock_nanosleep");
     }
-    if(do_thread_lock)
-        pthread_mutex_lock(&thread_lock);
 }
 
 unsigned char Posix::do_inb(unsigned int port)
