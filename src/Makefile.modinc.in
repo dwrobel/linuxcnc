@@ -112,7 +112,7 @@ $(foreach mod,$(patsubst %.o,%,$(obj-m)),\
 	$(eval $(mod).so: $(call getobjs,$(mod))))
 %.o: %.c
 	$(ECHO) Compiling realtime $<
-	$(Q)$(CC) -o $@ $(EXTRA_CFLAGS) -c $<
+	$(Q)$(CC) -o $@ $(EXTRA_CFLAGS) $(CPPFLAGS) -c $<
 
 .PHONY: %.so
 %.so:
@@ -120,7 +120,7 @@ $(foreach mod,$(patsubst %.o,%,$(obj-m)),\
 	$(Q)ld -d -r -o $*.tmp $^
 	$(Q)objcopy -j .rtapi_export -O binary $*.tmp $*.sym
 	$(Q)(echo '{ global : '; tr -s '\0' < $*.sym | xargs -r0 printf '%s;\n' | grep .; echo 'local : * ; };') > $*.ver
-	$(Q)$(CC) -shared -Bsymbolic $(LDFLAGS) -Wl,--version-script,$*.ver -o $@ $^ -lm
+	$(Q)$(CC) -shared -Bsymbolic $(CPPFLAGS) $(LDFLAGS) -Wl,--version-script,$*.ver -o $@ $^ -lm
 endif
 
 ifeq ($(BUILDSYS),normal)
