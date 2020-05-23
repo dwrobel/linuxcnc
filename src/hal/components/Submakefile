@@ -60,7 +60,7 @@ USERSRCS += $(HALSTREAMERSRCS)
 
 ../bin/halstreamer: $(call TOOBJS, $(HALSTREAMERSRCS)) ../lib/liblinuxcnchal.so.0
 	$(ECHO) Linking $(notdir $@)
-	$(Q)$(CC) $(LDFLAGS) -o $@ $^
+	$(Q)$(CC) $(CPPFLAGS) $(LDFLAGS) -o $@ $^
 TARGETS += ../bin/halstreamer
 
 HALSAMPLERSRCS := hal/components/sampler_usr.c
@@ -68,7 +68,7 @@ USERSRCS += $(HALSAMPLERSRCS)
 
 ../bin/halsampler: $(call TOOBJS, $(HALSAMPLERSRCS)) ../lib/liblinuxcnchal.so.0
 	$(ECHO) Linking $(notdir $@)
-	$(Q)$(CC) $(LDFLAGS) -o $@ $^
+	$(Q)$(CC) $(CPPFLAGS) $(LDFLAGS) -o $@ $^
 TARGETS += ../bin/halsampler
 
 PYSAMPLERSRCS := hal/components/panelui.c
@@ -77,7 +77,7 @@ PYFLAGS := $(PYTHON_EXTRA_LDFLAGS) $(BOOST_PYTHON_LIB) $(PYTHON_LIBS) $(PYTHON_E
 
 ../bin/panelui: $(call TOOBJS, $(PYSAMPLERSRCS)) ../lib/liblinuxcnchal.so.0
 	$(ECHO) Linking $(notdir $@)
-	$(Q)$(CC) -o $@ $^ $(PYFLAGS)
+	$(Q)$(CC) $(CPPFLAGS) -o $@ $^ $(PYFLAGS)
 TARGETS += ../bin/panelui
 
 hal/components/conv_float_s32.comp: hal/components/conv.comp.in hal/components/mkconv.sh hal/components/Submakefile
