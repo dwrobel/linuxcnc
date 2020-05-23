@@ -8,7 +8,7 @@ TARGETS += ../lib/libposemath.so ../lib/libposemath.so.0
 	$(ECHO) Creating shared library $(notdir $@)
 	@mkdir -p ../lib
 	@rm -f $@
-	@$(CXX) $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^
+	@$(CXX) $(CPPFLAGS) $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^
 
 $(patsubst ./libnml/posemath/%,../include/%,$(wildcard ./libnml/posemath/*.h)): ../include/%.h: ./libnml/posemath/%.h
 	cp $^ $@
