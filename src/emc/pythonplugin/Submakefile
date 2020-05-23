@@ -19,7 +19,7 @@ TARGETS += ../lib/libpyplugin.so.0
 	$(ECHO) Linking $(notdir $@)
 	@mkdir -p ../lib
 	@rm -f $@
-	$(CXX) -g $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^ -lstdc++ $(BOOST_PYTHON_LIBS) -l$(LIBPYTHON)
+	$(CXX) -g $(CPPFLAGS) $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^ -lstdc++ $(BOOST_PYTHON_LIBS) -l$(LIBPYTHON)
 
 
 $(patsubst ./emc/pythonplugin/%,../include/%,$(wildcard ./emc/pythonplugin/*.h)): ../include/%.h: ./emc/pythonplugin/%.h
