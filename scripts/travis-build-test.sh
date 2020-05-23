@@ -5,4 +5,7 @@ cd src
 make -O -j$(getconf _NPROCESSORS_ONLN) manpages V=1
 make -O -j$(getconf _NPROCESSORS_ONLN) translateddocs V=1
 make -O -j$(getconf _NPROCESSORS_ONLN) default pycheck V=1
-../scripts/rip-environment runtests
+sudo setcap cap_sys_rawio,cap_sys_nice+ep  ../bin/rtapi_app
+timeout --signal=9 3600 ../scripts/rip-environment runtests $([ -z ${TRAVIS} ] && echo '-v') || \
+    ([ -e ~/linuxcnc_debug.txt ] && cat ~/linuxcnc_debug.txt; \
+     [ -e ~/linuxcnc_print.txt ] && cat ~/linuxcnc_print.txt ;false)
