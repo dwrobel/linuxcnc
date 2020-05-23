@@ -19,7 +19,7 @@ $(call TOOBJSDEPS, $(RTAPI_APP_SRCS)): EXTRAFLAGS += -DSIM \
 	-UULAPI -DRTAPI -pthread
 ../bin/rtapi_app: $(call TOOBJS, $(RTAPI_APP_SRCS))
 	$(ECHO) Linking $(notdir $@)
-	$(Q)$(CXX) -rdynamic $(LDFLAGS) -o $@ $^ $(LIBDL) -pthread -lrt $(LIBUDEV_LIBS) -ldl
+	$(Q)$(CXX) -rdynamic $(CPPFLAGS) $(LDFLAGS) -o $@ $^ $(LIBDL) -pthread -lrt $(LIBUDEV_LIBS) -ldl
 TARGETS += ../bin/rtapi_app
 endif
 
@@ -29,7 +29,7 @@ USERSRCS += $(USPACE_RTAI_SRCS)
 $(call TOOBJSDEPS, $(USPACE_RTAI_SRCS)): EXTRAFLAGS += -pthread -fPIC $(filter-out -Wstrict-prototypes,$(RTAI_LXRT_CFLAGS))
 ../lib/libuspace-rtai.so.0: $(call TOOBJS, $(USPACE_RTAI_SRCS))
 	$(ECHO) Linking $(notdir $@)
-	$(Q)$(CXX) -shared $(LDFLAGS) -o $@ $^ $(RTAI_LXRT_LDFLAGS) -Wl,-soname,$(notdir $@)
+	$(Q)$(CXX) -shared $(CPPFLAGS) $(LDFLAGS) -o $@ $^ $(RTAI_LXRT_LDFLAGS) -Wl,-soname,$(notdir $@)
 TARGETS += ../lib/libuspace-rtai.so.0
 TARGETS += ../lib/libuspace-rtai.so
 endif
