@@ -43,7 +43,7 @@ USERSRCS += $(CLASSICLADDERSRCS)
 
 ../bin/classicladder: $(call TOOBJS, $(CLASSICLADDERSRCS)) ../lib/liblinuxcnchal.so.0
 	$(ECHO) Linking $(notdir $@)
-	@$(CC) $(LDFLAGS) $(CFLAGS) $(ULFLAGS) -o $@ $^ $(GTK_LIBS) -lpthread
+	@$(CC) $(LDFLAGS) $(CPPFLAGS) $(ULFLAGS) -o $@ $^ $(GTK_LIBS) -lpthread
 
 TARGETS += ../bin/classicladder
 endif
