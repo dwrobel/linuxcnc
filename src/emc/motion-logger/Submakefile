@@ -9,5 +9,5 @@ USERSRCS += $(MOTION_LOGGER_SRCS)
 
 ../bin/motion-logger: $(call TOOBJS, $(MOTION_LOGGER_SRCS)) ../lib/libnml.so.0 ../lib/liblinuxcnchal.so.0
 	$(ECHO) Linking $(notdir $@)
-	$(Q)$(CC) $(LDFLAGS) -o $@ $^ -lm
+	$(Q)$(CC) $(CPPFLAGS) $(LDFLAGS) -o $@ $^ -lm
 
