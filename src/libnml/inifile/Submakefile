@@ -17,9 +17,9 @@ TARGETS += ../lib/liblinuxcncini.so ../lib/liblinuxcncini.so.0
 	$(ECHO) Creating shared library $(notdir $@)
 	@mkdir -p ../lib
 	@rm -f $@
-	$(Q)$(CXX) $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^
+	$(Q)$(CXX) $(CPPFLAGS) $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^
 
 ../bin/inivar: $(call TOOBJS, $(INIFILESRCS)) ../lib/liblinuxcncini.so.0
 	$(ECHO) Linking $(notdir $@)
-	$(Q)$(CXX) $(LDFLAGS) -o $@ $^ 
+	$(Q)$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $^
 TARGETS += ../bin/inivar
