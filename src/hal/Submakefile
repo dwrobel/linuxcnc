@@ -18,7 +18,7 @@ $(HALLIB).0: $(call TOOBJS, $(HALLIBSRCS))
 	$(ECHO) Creating shared library $(notdir $@)
 	@mkdir -p ../lib
 	@rm -f $@
-	$(Q)$(CC) $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^ $(HALLIB_LIBS) $(ULAPI_LDFLAGS)
+	$(Q)$(CC) $(CPPFLAGS) $(LDFLAGS) -Wl,-soname,$(notdir $@) -shared -o $@ $^ $(HALLIB_LIBS) $(ULAPI_LDFLAGS)
 
 HALMODULESRCS := hal/halmodule.cc
 PYSRCS += $(HALMODULESRCS)
@@ -26,7 +26,7 @@ PYSRCS += $(HALMODULESRCS)
 HALMODULE := ../lib/python/_hal.so
 $(HALMODULE): $(call TOOBJS, $(HALMODULESRCS)) $(HALLIB)
 	$(ECHO) Linking python module $(notdir $@)
-	$(Q)$(CXX) $(LDFLAGS) -shared -o $@ $^
+	$(Q)$(CXX) $(CPPFLAGS) $(LDFLAGS) -shared -o $@ $^
 
 TARGETS += $(HALLIB) ../lib/liblinuxcnchal.so.0
 PYTARGETS += $(HALMODULE)
