@@ -383,8 +383,10 @@ static int detect_realtime() {
 }
 
 int rtapi_is_realtime() {
-    if(_rtapi_is_realtime == -1) _rtapi_is_realtime = detect_realtime();
-    return _rtapi_is_realtime;
+    return 1;
+// TODO: dw cleanup
+//    if(_rtapi_is_realtime == -1) _rtapi_is_realtime = detect_realtime();
+//    return _rtapi_is_realtime;
 }
 
 /* Like clock_nanosleep, except that an optional 'estimate of now' parameter may
