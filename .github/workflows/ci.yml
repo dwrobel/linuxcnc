@@ -29,7 +29,11 @@ jobs:
         ./configure --with-realtime=uspace --disable-check-runtime-deps
         make -O -j$((1+$(nproc))) default pycheck V=1
         # Note that the package build covers html docs
-        ../scripts/rip-environment runtests
+        timeout --signal=9 3600 ../scripts/rip-environment runtests -v || \
+          ([ -e ~/linuxcnc_debug.txt ] && (echo linuxcnc_debug.txt; cat ~/linuxcnc_debug.txt); \
+           [ -e ~/linuxcnc_print.txt ] && (echo linuxcnc_print.txt; cat ~/linuxcnc_print.txt); \
+           false)
+
     
   htmldocs:
     runs-on: ubuntu-16.04
