@@ -356,7 +356,7 @@ w('labelframe',fcommon,'-text','','-relief','raised','-bd','1')
 # new monitor frame
 w('labelframe',fmonitor,'-text','','-relief','flat')
 arcfont = fname + ' ' + str(int(fsize) * 3)
-w('label',fmonitor + '.arc-voltage','-anchor','se','-width','3','-fg','blue','-font',arcfont)
+w('label',fmonitor + '.arc-voltage','-anchor','se','-width','5','-fg','blue','-font',arcfont)
 w('label',fmonitor + '.aVlab','-text','Arc Voltage','-anchor','w','-width','11')
 w('canvas',fmonitor + '.led-arc-ok','-width',cwidth,'-height',cheight)
 w(fmonitor + '.led-arc-ok','create','oval',ledx,ledy,ledwidth,ledheight,'-fill','#37F608','-disabledfill','grey')
@@ -824,7 +824,7 @@ def user_live_update():
             else:
                 w(widget,'configure','-state','disabled')
     # update arc voltage
-    w(fmonitor + '.arc-voltage','configure','-text','%3.0f' % (comp['arc-voltage']))
+    w(fmonitor + '.arc-voltage','configure','-text','%3.1f' % (comp['arc-voltage']))
     # set machine state
     isIdleHomed = True
     isIdleOn = True
