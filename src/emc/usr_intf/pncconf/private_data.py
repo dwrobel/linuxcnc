@@ -857,6 +857,52 @@ class Private_Data:
         [S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],
         [S.NUSED,0],[S.NUSED,0],[S.NUSED,0],[S.NUSED,0],[S.NUSED,0],[S.NUSED,0],[S.NUSED,0],],
 
+   # board title,         boardname, firmwarename,   firmware directory,Hal driver name,
+   ['7i92-Internal Data', '7i92',    'PLASMA_DW_34', '7i92',            'hm2_eth',
+# (5) max encoders,       number of pins per encoder,
+      1,                  3,
+# (7) max resolver gens,  number of pins per resolver gen
+      0,                  0,
+# (9) max pwm gens,       number of pins per pwm gen
+      2,                  1,
+#(11) max tppwmgens,      number of pins per tppwmgen
+      0,                  0,
+#(13) max step gens,      number of pins per step gen,
+      6,                  2,
+#(15) max smart serial,   number of channels,
+      0,                  0,
+#(17) discovered sserial devices,
+      [],
+#(18) spare,spare,spare,spare,spare,spare,spare,
+      0,    0,    0,    0,    0,    0,    0,
+#(25) has watchdog(0/1),  max GPIOI,
+      1,                  34,
+#(27) low frequency rate, hi frequency rate,
+      33,                 200,
+#(29) available connector numbers,
+#     A list in the order they should appear.
+#     This should match the physical labels on the Mesa card.
+      [2, 1],
+#(30)
+        # P2
+        # 00
+        [S.PWMP,  0],[S.GPIOI, 0],[S.STEPA, 0],[S.GPIOI, 0],[S.STEPB, 0],
+        # 05
+        [S.GPIOI, 0],[S.STEPA, 1],[S.GPIOI, 0],[S.STEPB, 1],[S.STEPA, 2],[S.STEPB, 2],[S.STEPA, 3],[S.STEPB, 3],
+        # 13
+        [S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],
+
+        # P1
+        # 17
+        [S.PWMP,  1],[S.GPIOI, 0],[S.STEPA, 4],[S.GPIOI, 0],[S.STEPB, 4],
+        # 22
+        [S.GPIOI, 0],[S.STEPA, 5],[S.GPIOI, 0],[S.STEPB, 5],
+        # 26
+        [S.ENCA, 0],[S.ENCB, 0],[S.ENCI, 0],[S.GPIOI, 0],
+        # 30
+        [S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],[S.GPIOI, 0],
+    ],
+
     # 7i93 ####################
     ["7i93-Internal Data", "7i93", "justio", "7i93", "hm2_eth",
         0,0, 0,0, 0,0, 0,0, 0,0, 0,0, [],0,0,0,0,0,0,0, 1, 48 , 33, 200, [2,1],
