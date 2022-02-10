@@ -43,7 +43,7 @@ set x [expr ($xmax - $masterwidth )  / 2 ]
 set y [expr ($ymax - $masterheight )  / 2]
 wm geometry . "${masterwidth}x${masterheight}+$x+$y"
 wm minsize . [int [expr $masterwidth*0.3]] [int [expr $masterheight*0.5]]
-wm attributes . -topmost yes
+wm attributes . -topmost no
 
 # trap mouse click on window manager delete and ask to save
 wm protocol . WM_DELETE_WINDOW askKill
