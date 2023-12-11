@@ -130,7 +130,7 @@ class HandlerClass:
             if os.path.realpath(m190Path) != os.path.realpath(self.PATHS.CONFIGPATH):
                 COPY(os.path.join(m190Path, 'M190'), os.path.join(self.PATHS.CONFIGPATH, 'M190'))
         self.machineName = self.iniFile.find('EMC', 'MACHINE')
-        self.machineTitle = f'{self.machineName} - QtPlasmaC v{LCNCVER}-{VERSION}, powered by QtVCP and LinuxCNC'
+        self.machineTitle = f'{self.machineName} - QtPlasmaC v{LCNCVER}-{VERSION}, powered by QtVCP and LinuxCNC v{linuxcnc.version}'
         self.prefsFile = os.path.join(self.PATHS.CONFIGPATH, self.machineName + '.prefs')
         self.materialFile = os.path.join(self.PATHS.CONFIGPATH, self.machineName + '_material.cfg')
         self.unitsPerMm = 1
@@ -327,10 +327,10 @@ class HandlerClass:
 
 # called by qtvcp.py
     def initialized__(self):
-        if linuxcnc.version.rsplit('.', 1)[0] != LCNCVER:
+        if '.'.join(linuxcnc.version.split('.')[:2]) != LCNCVER:
             msg0 = _translate('HandlerClass', 'LinuxCNC version should be')
             msg1 = _translate('HandlerClass', 'The detected version is')
-            STATUS.emit('error', linuxcnc.OPERATOR_ERROR, f'{msg0} {LCNCVER}\n{msg1} {linuxcnc.version.rsplit(".", 1)[0]}')
+            STATUS.emit('error', linuxcnc.OPERATOR_ERROR, f'{msg0} {LCNCVER}\n{msg1} {linuxcnc.version.split(".")[:2]}')
             quit()
         ucFile = os.path.join(self.PATHS.CONFIGPATH, 'qtplasmac_custom.py')
         if os.path.isfile(ucFile):
